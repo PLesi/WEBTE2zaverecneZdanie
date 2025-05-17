@@ -2,7 +2,7 @@
 
     $servername = "localhost";
     $username = "xplesko";
-    $password = "xplesko";
+    $password = "";
     $dbname = "pdfApp";
 
     $conn = null;
