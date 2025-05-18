@@ -1,6 +1,6 @@
-<!--
-<?php
 
+<?php
+/*
 session_start(); 
 
 require_once 'config.php';
@@ -82,8 +82,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["change_api_key"]) && $
         $message = "Chyba pri generovaní nového API kľúča.";
     }
 }
+*/
 ?>
--->
+
 <?php
 $message = ""; // Správa pre používateľa
 $username = "N/A"; // Meno používateľa z DB
