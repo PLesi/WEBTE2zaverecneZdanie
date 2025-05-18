@@ -1,6 +1,5 @@
 <?php
-// Define base path for assets
-$base_url = '/zz/WEBTE2zaverecneZdanie/'; // Adjust based on your server root
+$base_url = '/zz/';
 ?>
 <!DOCTYPE html>
 <html lang="sk">
