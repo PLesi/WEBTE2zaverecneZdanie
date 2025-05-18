@@ -23,7 +23,7 @@
             const formData = new FormData();
             formData.append('pdf_content', pdfContent);
 
-            fetch('generate_pdf.php', {
+            fetch('manualPDF.php', {
                 method: 'POST',
                 body: formData,
             })
