@@ -1,6 +1,6 @@
 <?php
 
-    $servername = "https://node75.webte.fei.stuba.sk";
+    $servername = "localhost";
     $username = "xlapos";
     $password = "mittudomen123";
     $dbname = "pdfApp";
