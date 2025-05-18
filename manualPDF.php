@@ -1,5 +1,5 @@
 <?php
-require_once('../../vendor/autoload.php');
+require_once('../../vendor/autoload.php'); //path to the autoload.php file 
 
 if(isset($_POST['pdf_content'])){
     $htmlContent = $_POST['pdf_content'];
