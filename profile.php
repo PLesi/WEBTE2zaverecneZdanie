@@ -84,6 +84,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["change_api_key"]) && $
 }
 ?>
 -->
+<?php
+$message = ""; // Správa pre používateľa
+$username = "N/A"; // Meno používateľa z DB
+$isAdmin = false;  // Admin status z DB
+$currentDbApiKey = "N/A"; // API kľúč aktuálne uložený v DB
+$sessionApiKey = $_SESSION['api_key'] ?? 'Chýba v session'; // API kľúč aktuálne v session
+?>
 <!DOCTYPE html>
 <html lang="sk">
 <head>
