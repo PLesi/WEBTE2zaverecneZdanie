@@ -1,3 +1,4 @@
+<!--
 <?php
 
 session_start(); 
@@ -82,7 +83,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["change_api_key"]) && $
     }
 }
 ?>
-
+-->
 <!DOCTYPE html>
 <html lang="sk">
 <head>
