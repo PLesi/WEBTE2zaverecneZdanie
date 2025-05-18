@@ -65,6 +65,22 @@
         updateContent();
     });
 
+    // Set the initial language based on localStorage or default to 'sk'
+    const savedLanguage = localStorage.getItem('language') || 'sk';
+
+    // Set the language in i18next
+    i18next.init({
+        lng: savedLanguage,
+        fallbackLng: 'en',
+        resources: translations
+    }, function (err, t) {
+        if (err) {
+            console.error('i18next initialization failed:', err);
+            return;
+        }
+        updateContent();
+    });
+
     // Update content with translations
     function updateContent() {
         document.querySelectorAll('[data-i18n]').forEach(element => {
@@ -76,6 +92,15 @@
     window.changeLanguage = function (lng) {
         i18next.changeLanguage(lng, () => {
             updateContent();
+        });
+    };
+
+
+    window.changeLanguage = function (lng) {
+        i18next.changeLanguage(lng, () => {
+            updateContent();
+            // Save the selected language to localStorage
+            localStorage.setItem('language', lng);
         });
     };
 })();
