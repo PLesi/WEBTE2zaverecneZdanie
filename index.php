@@ -56,31 +56,31 @@ $base_url = '/zz/';
                 <a href="<?php echo $base_url; ?>frontend/pages/compression.php" class="btn btn-primary operation-btn" data-i18n="operations.compress">Komprimovať PDF</a>
             </div>
             <div class="col-md-4">
-                <button class="btn btn-primary operation-btn" data-i18n="operations.jpg_to_pdf">JPG do PDF</button>
+                <a href="<?php echo $base_url; ?>frontend/pages/jpgToPdf.php" class="btn btn-primary operation-btn" data-i18n="operations.jpg_to_pdf">JPG do PDF</a>
             </div>
             <div class="col-md-4">
-                <button class="btn btn-primary operation-btn" data-i18n="operations.merge">Spojiť PDF</button>
+                <a href="<?php echo $base_url; ?>frontend/pages/merge.php" class="btn btn-primary operation-btn" data-i18n="operations.merge">Spojiť PDF</a>
             </div>
             <div class="col-md-4">
-                <button class="btn btn-primary operation-btn" data-i18n="operations.rotate">Rotovať stránky</button>
+                <a href="<?php echo $base_url; ?>frontend/pages/rotatepages.php" class="btn btn-primary operation-btn" data-i18n="operations.rotate">Rotovať stránky</a>
             </div>
             <div class="col-md-4">
-                <button class="btn btn-primary operation-btn" data-i18n="operations.number">Číslovať stránky</button>
+                <a href="<?php echo $base_url; ?>frontend/pages/numberpages.php" class="btn btn-primary operation-btn" data-i18n="operations.number">Číslovať stránky</a>
             </div>
             <div class="col-md-4">
-                <button class="btn btn-primary operation-btn" data-i18n="operations.protect">Pridať heslo</button>
+                <a href="<?php echo $base_url; ?>frontend/pages/protect.php" class="btn btn-primary operation-btn" data-i18n="operations.protect">Pridať heslo</a>
             </div>
             <div class="col-md-4">
-                <button class="btn btn-primary operation-btn" data-i18n="operations.edit">Editovať PDF</button>
+                <a href="<?php echo $base_url; ?>frontend/pages/edit.php" class="btn btn-primary operation-btn" data-i18n="operations.edit">Editovať PDF</a>
             </div>
             <div class="col-md-4">
-                <button class="btn btn-primary operation-btn" data-i18n="operations.delete_page">Odstrániť stránku</button>
+                <a href="<?php echo $base_url; ?>frontend/pages/deletepage.php" class="btn btn-primary operation-btn" data-i18n="operations.delete_page">Odstrániť stránku</a>
             </div>
             <div class="col-md-4">
-                <button class="btn btn-primary operation-btn" data-i18n="operations.split">Rozdeliť PDF</button>
+                <a href="<?php echo $base_url; ?>frontend/pages/split.php" class="btn btn-primary operation-btn" data-i18n="operations.split">Rozdeliť PDF</a>
             </div>
             <div class="col-md-4">
-                <button class="btn btn-primary operation-btn" data-i18n="operations.rearrange">Preskupiť stránky</button>
+                <a href="<?php echo $base_url; ?>frontend/pages/rearrange.php" class="btn btn-primary operation-btn" data-i18n="operations.rearrange">Preskupiť stránky</a>
             </div>
         </div>
     </div>
