@@ -3,7 +3,7 @@ require_once('../../vendor/autoload.php'); //path to the autoload.php file
 
 if(isset($_POST['pdf_content'])){
     $htmlContent = $_POST['pdf_content'];
-    $pdf = new TCPDF();
+    $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
     $pdf->SetCreator("HTML to PDF");
     $pdf->SetAuthor("PDF editor");
@@ -13,7 +13,7 @@ if(isset($_POST['pdf_content'])){
     $pdf->setPrintFooter(false);
 
     $pdf->AddPage();
-    $pdf->SetFont("helvetica", "", 12);
+    $pdf->SetFont('dejavusans', '', 12); // Or another Unicode-compatible font
     $pdf->writeHTML($htmlContent, true, false, true, false, '');
 
     header("Content-Type: application/pdf");
