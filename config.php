@@ -1,8 +1,8 @@
 <?php
 
     $servername = "localhost";
-    $username = "xplesko";
-    $password = "";
+    $username = "xlapos";
+    $password = "mittudomen123";
     $dbname = "pdfApp";
 
     $conn = null;
