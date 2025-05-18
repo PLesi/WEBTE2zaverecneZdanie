@@ -4,7 +4,7 @@
     <title>Download as PDF</title>
 </head>
 <body>
-
+    <!-- To co bude v PDF, taktiež viditelne na webe -->
     <div id="toPDF" style="border: 1px solid #ccc; padding: 20px;">
         <h1>PDF Editor manual</h1>
         <p>Operácie:</p>
