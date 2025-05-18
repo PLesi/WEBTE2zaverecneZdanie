@@ -1,5 +1,5 @@
 <?php
-require_once('path/to/tcpdf/tcpdf.php'); // Include the TCPDF library...composer require tecnickcom/tcpdf
+require_once('../../vendor/autoload.php');
 
 if(isset($_POST['pdf_content'])){
     $htmlContent = $_POST['pdf_content'];
