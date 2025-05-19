@@ -8,7 +8,7 @@ $password = $_POST['password'] ?? '';
 
 if (empty($email) || empty($password)) {
     $_SESSION['login_status'] = "empty";
-    header("Location: ../pages/login_form.php");
+    header("Location: frontend/pages/login_form.php");
     exit();
 }
 try {
@@ -24,11 +24,11 @@ try {
         exit();
     } else {
         $_SESSION['login_status'] = "invalid";
-        header("Location: ../pages/login_form.php");
+        header("Location: frontend/pages/login_form.php");
         exit();
     }
 } catch (PDOException $e) {
     $_SESSION['login_status'] = "dbError";
-    header("Location: ../pages/login_form.php");
+    header("Location: frontend/pages/login_form.php");
     exit();
 }
