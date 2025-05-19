@@ -9,6 +9,8 @@ function generateApiKey(): string
     try {
         $randomBytes = random_bytes(32);
         $apiKey = bin2hex($randomBytes);
+        error_log("DEBUG: API key generated: " . $apiKey, 3, $debugLogFile);
+
         return $apiKey;
     } catch (Exception $e) {
         error_log("Error generating API key: " . $e->getMessage());
