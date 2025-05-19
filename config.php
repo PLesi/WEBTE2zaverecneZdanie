@@ -5,7 +5,7 @@
     $password = "xplesko";
     //$username = "xlapos";
     //$password = "mittudomen123";
-    $dbname = "pdfdb";
+    $dbname = "pdfApp";
 
     $conn = null;
 
