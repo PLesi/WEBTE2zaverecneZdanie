@@ -2,6 +2,7 @@
 session_start();
 
 require_once 'config.php';
+$debugLogFile = '/tmp/my_api_key_debug.log';
 
 function generateApiKey(): string
 {
@@ -54,8 +55,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header("Location: frontend/pages/registration_form.php");
             exit();
         }
-        error_log("DEBUG: Actual length of \$hasshed_apiKey: " . strlen($hasshed_apiKey));
-        error_log("DEBUG: Value of \$hasshed_apiKey: " . $hasshed_apiKey);
+        error_log("DEBUG: Actual length of \$hasshed_apiKey: " . strlen($hasshed_apiKey), 3, $debugLogFile);
+        error_log("DEBUG: Value of \$hasshed_apiKey: " . $hasshed_apiKey, 3, $debugLogFile);
 
         $stmt = $conn->prepare("INSERT INTO users (email, username, password) VALUES (:email, :username, :password)");
         $stmt->bindParam("email", $email);
