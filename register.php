@@ -27,13 +27,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($username) || empty($email) || empty($password) || empty($password2)) {
         // v JS zoberieme "empty" a vypiseme hlasku v prislusnom jazyku
         $_SESSION['register_status'] = "empty";
-        header("Location: register.php");
+        header("Location: ../pages/registration_form.php");
         exit();
     }
 
     if ($password != $password2) {
         $_SESSION['register_status'] = "passwordsNotEqual";
-        header("Location: register.php");
+        header("Location: ../pages/registration_form.php");
         exit();
     }
 
@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute();
         if ($stmt->fetch(PDO::FETCH_ASSOC) != null) {
             $_SESSION["register_error"] = "exist";
-            header("Location: register.php");
+            header("Location: ../pages/registration_form.php");
             exit();
         }
 
@@ -51,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $hasshed_apiKey = password_hash($apiKey, PASSWORD_ARGON2I);
         if ($apiKey == "") {
             $_SESSION["register_error"] = "apiKeyError";
-            header("Location: register.php");
+            header("Location: ../pages/registration_form.php");
             exit();
         }
 
@@ -76,7 +76,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     } catch (PDOException $e) {
         $_SESSION["register_status"] = "dbError";
-        header("Location: register.php");
+        header("Location: ../pages/registration_form.php");
         exit();
     }
 }
