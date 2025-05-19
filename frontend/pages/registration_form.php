@@ -80,7 +80,7 @@ unset($_SESSION['register_status']);
                         echo "Vyplňte všetky polia.";
                     } elseif ($status === "passwordsNotEqual") {
                         echo "Heslá sa nezhodujú.";
-                    } elseif ($status === "emailExists") {
+                    } elseif ($status === "exist") {
                         echo "Tento email je už zaregistrovaný.";
                     } elseif ($status === "apiKeyError") {
                         echo "Chyba pri generovaní API kľúča. Skúste znova.";
