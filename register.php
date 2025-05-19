@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($password != $password2) {
         $_SESSION['register_status'] = "passwordsNotEqual";
-        header("Location: /frontend/pages/registration_form.php");
+        header("Location: frontend/pages/registration_form.php");
         exit();
     }
 
@@ -42,16 +42,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bindParam("email", $email);
         $stmt->execute();
         if ($stmt->fetch(PDO::FETCH_ASSOC) != null) {
-            $_SESSION["register_error"] = "exist";
-            header("Location: /frontend/pages/registration_form.php");
+            $_SESSION["register_status"] = "exist";
+            header("Location: frontend/pages/registration_form.php");
             exit();
         }
 
         $apiKey = generateApiKey();
         $hasshed_apiKey = password_hash($apiKey, PASSWORD_ARGON2I);
         if ($apiKey == "") {
-            $_SESSION["register_error"] = "apiKeyError";
-            header("Location: /frontend/pages/registration_form.php");
+            $_SESSION["register_status"] = "apiKeyError";
+            header("Location: frontend/pages/registration_form.php");
             exit();
         }
 
@@ -76,7 +76,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     } catch (PDOException $e) {
         $_SESSION["register_status"] = "dbError";
-        header("Location: /frontend/pages/registration_form.php");
+        header("Location: frontend/pages/registration_form.php");
         exit();
     }
 }
