@@ -1,10 +1,11 @@
 <?php
+$debugLogFile = '/tmp/my_api_key_debug.log';
 error_log("DEBUG: Starting registration process", 3, $debugLogFile);
 
 session_start();
 
 require_once 'config.php';
-$debugLogFile = '/tmp/my_api_key_debug.log';
+
 error_log("DEBUG: Starting registration process", 3, $debugLogFile);
 
 function generateApiKey(): string
