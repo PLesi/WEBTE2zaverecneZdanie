@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($password != $password2) {
         $_SESSION['register_status'] = "passwordsNotEqual";
-        header("Location: ../pages/registration_form.php");
+        header("Location: /frontend/pages/registration_form.php");
         exit();
     }
 
@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute();
         if ($stmt->fetch(PDO::FETCH_ASSOC) != null) {
             $_SESSION["register_error"] = "exist";
-            header("Location: ../pages/registration_form.php");
+            header("Location: /frontend/pages/registration_form.php");
             exit();
         }
 
@@ -51,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $hasshed_apiKey = password_hash($apiKey, PASSWORD_ARGON2I);
         if ($apiKey == "") {
             $_SESSION["register_error"] = "apiKeyError";
-            header("Location: ../pages/registration_form.php");
+            header("Location: /frontend/pages/registration_form.php");
             exit();
         }
 
@@ -71,12 +71,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION["register_status"] = "ok";
         $_SESSION["login_status"] = "ok";
         $_SESSION["username"] = $username;
-        header("Location: index.php");
+        header("Location: index.php");                                                                                                                                                                                                                                                                                                                                                                                                                                                  
         exit();
 
     } catch (PDOException $e) {
         $_SESSION["register_status"] = "dbError";
-        header("Location: ../pages/registration_form.php");
+        header("Location: /frontend/pages/registration_form.php");
         exit();
     }
 }
