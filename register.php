@@ -76,6 +76,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     } catch (PDOException $e) {
         $_SESSION["register_status"] = "dbError";
+        echo "Chyba databázy: " . $e->getMessage();
         header("Location: frontend/pages/registration_form.php");
         exit();
     }
