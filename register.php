@@ -4,7 +4,7 @@ require_once 'config.php';
 function generateApiKey(): string
 {
     try {
-        $randomBytes = random_bytes(32);
+        $randomBytes = random_bytes(8);
         $apiKey = bin2hex($randomBytes);
         return $apiKey;
     } catch (Exception $e) {
