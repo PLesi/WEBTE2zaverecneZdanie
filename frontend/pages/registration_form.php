@@ -1,6 +1,7 @@
 <?php
 session_start();
 $status = $_SESSION['register_status'] ?? '';
+$error = $_SESSION['reg_error'] ?? '';
 unset($_SESSION['register_status']);
 ?>
 
@@ -71,6 +72,10 @@ unset($_SESSION['register_status']);
             <?php if ($status): ?>
                 <div class="text-danger mb-3">
                     <?php
+                    if($error){
+                        echo "Chyba: " . htmlspecialchars($error);
+                    } 
+
                     if ($status === "empty") {
                         echo "Vyplňte všetky polia.";
                     } elseif ($status === "passwordsNotEqual") {
