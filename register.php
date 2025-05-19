@@ -54,6 +54,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header("Location: frontend/pages/registration_form.php");
             exit();
         }
+        error_log("DEBUG: Actual length of \$hasshed_apiKey: " . strlen($hasshed_apiKey));
+        error_log("DEBUG: Value of \$hasshed_apiKey: " . $hasshed_apiKey);
 
         $stmt = $conn->prepare("INSERT INTO users (email, username, password) VALUES (:email, :username, :password)");
         $stmt->bindParam("email", $email);
