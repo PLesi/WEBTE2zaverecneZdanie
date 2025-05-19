@@ -1,6 +1,6 @@
 <?php
 // Define debug log file at the very top, before any other operations
-$debugLogFile = '/tmp/my_api_key_debug.log';
+$debugLogFile = '/tmp/my_api_keys_debug.log';
 
 // --- LOGGING POINT 1: Script started ---
 error_log("DEBUG: register.php script STARTED execution. Timestamp: " . date('Y-m-d H:i:s') . "\n", 3, $debugLogFile);
@@ -74,7 +74,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         error_log("DEBUG: Actual length of \$hasshed_apiKey: " . strlen($hasshed_apiKey), 3, $debugLogFile);
         error_log("DEBUG: Value of \$hasshed_apiKey: " . $hasshed_apiKey, 3, $debugLogFile);
         // ---------------------------------------------------------
-
+        $stmt = $conn->prepare("SHOW CREATE TABLE api_keys");
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $createTableStatement = $result['Create Table'];
+        error_log("DEBUG: CREATE TABLE statement for api_keys: " . $createTableStatement, 3, $debugLogFile);
+        // ---------------------------------------------------------
         if ($apiKey == "") {
             $_SESSION["register_status"] = "apiKeyError";
             header("Location: frontend/pages/registration_form.php");
