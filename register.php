@@ -78,7 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION["register_status"] = "dbError";
         $_SESSION["reg_error"] = $e->getMessage();
         
-        //header("Location: frontend/pages/registration_form.php");
+        header("Location: frontend/pages/registration_form.php");
         exit();
     }
 }
