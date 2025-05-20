@@ -6,7 +6,7 @@
     <title>User History</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="frontend/assets/css/styles.css" rel="stylesheet" />
+    <link href="../assets/css/styles.css" rel="stylesheet" />
 
     <style>
         .table-container {
@@ -54,7 +54,7 @@
     </style>
 </head>
 <body>
-<?php include 'frontend/pages/navbar.php'; ?>
+<?php include 'navbar.php'; ?>
 <h2>User History</h2>
 
 <p>This page displays user activity history.</p>
@@ -82,7 +82,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        fetch('get_history_data.php')
+        fetch('../../get_history_data.php')
             .then(response => response.json())
             .then(data => {
                 const tableBody = document.querySelector('#historyTable tbody');

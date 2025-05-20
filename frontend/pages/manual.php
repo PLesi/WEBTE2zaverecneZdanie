@@ -50,7 +50,7 @@
             const formData = new FormData();
             formData.append('pdf_content', pdfContent);
 
-            fetch('manualPDF.php', {
+            fetch('../../manualPDF.php', {
                 method: 'POST',
                 body: formData,
             })

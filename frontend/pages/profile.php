@@ -100,7 +100,7 @@ $sessionApiKey = $_SESSION['api_key'] ?? 'Chýba v session'; // API kľúč aktu
     <title>Správa API kľúča</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="frontend/assets/css/styles.css" rel="stylesheet" />
+    <link href="../assets/css/styles.css" rel="stylesheet" />
 
     <style>
         h2, h3 {
@@ -174,7 +174,7 @@ $sessionApiKey = $_SESSION['api_key'] ?? 'Chýba v session'; // API kľúč aktu
     </style>
 </head>
 <body>
-    <?php include 'frontend/pages/navbar.php'; ?>
+    <?php include 'navbar.php'; ?>
     <div class="container d-flex justify-content-center align-items-center vh-100">
         <div class="col-md-5 hero-section">
             <h2>Správa API kľúča</h2>
