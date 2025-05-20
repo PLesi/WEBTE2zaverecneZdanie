@@ -98,37 +98,23 @@ $sessionApiKey = $_SESSION['api_key'] ?? 'Chýba v session'; // API kľúč aktu
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Správa API kľúča</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="frontend/assets/css/styles.css" rel="stylesheet" />
+
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-        }
-        .container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 600px;
-        }
-        h1, h2 {
-            color: #333;
+        h2, h3 {
+            color: #f8f9fa;
             text-align: center;
             margin-bottom: 20px;
         }
         .user-info p {
             margin: 10px 0;
             font-size: 1.1em;
-            color: #555;
+            color: #f8f9fa;
         }
         .user-info strong {
-            color: #333;
+            color: #adb5bd;
         }
         .admin-status {
             color: <?php echo $isAdmin ? '#28a745' : '#dc3545'; ?>;
@@ -136,23 +122,22 @@ $sessionApiKey = $_SESSION['api_key'] ?? 'Chýba v session'; // API kľúč aktu
         }
         .api-key-section {
             margin-top: 30px;
-            border-top: 1px solid #eee;
+            border-top: 1px solid #495057;
             padding-top: 20px;
         }
         .api-key-section label {
             display: block;
             margin-bottom: 10px;
-            font-weight: bold;
-            color: #333;
+            color: #f8f9fa;
         }
         .api-key-display {
-            background-color: #e9e9e9;
+            background-color: #495057;
             padding: 10px 15px;
             border-radius: 4px;
             font-family: monospace;
             word-break: break-all;
             margin-bottom: 10px; /* Upravené, aby sa vmestili obe zobrazenia kľúčov */
-            color: #666;
+            color: #adb5bd;
             font-size: 0.9em;
         }
         .api-key-actions button {
@@ -189,37 +174,40 @@ $sessionApiKey = $_SESSION['api_key'] ?? 'Chýba v session'; // API kľúč aktu
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Správa API kľúča</h1>
-        <?php if (!empty($message)): ?>
-            <div class="message <?php echo strpos($message, 'úspešne') !== false ? 'success' : 'error'; ?>">
-                <?php echo htmlspecialchars($message); ?>
-            </div>
-        <?php endif; ?>
+    <?php include 'frontend/pages/navbar.php'; ?>
+    <div class="container d-flex justify-content-center align-items-center vh-100">
+        <div class="col-md-5 hero-section">
+            <h2>Správa API kľúča</h2>
+            <?php if (!empty($message)): ?>
+                <div class="message <?php echo strpos($message, 'úspešne') !== false ? 'success' : 'error'; ?>">
+                    <?php echo htmlspecialchars($message); ?>
+                </div>
+            <?php endif; ?>
 
-        <div class="user-info">
-            <h2>Vaše informácie</h2>
-            <p><strong>ID Používateľa (zo Session):</strong> <?php echo htmlspecialchars($userId ?? 'N/A'); ?></p>
-            <p><strong>Meno (z DB):</strong> <?php echo $username; ?></p>
-            <p><strong>Status (z DB):</strong> <span class="admin-status"><?php echo $isAdmin ? 'Administrátor' : 'Bežný užívateľ'; ?></span></p>
-        </div>
-
-        <div class="api-key-section">
-            <h2>API kľúč</h2>
-            <label for="dbApiKeyDisplay">API kľúč uložený v databáze:</label>
-            <div id="dbApiKeyDisplay" class="api-key-display">
-                <?php echo $currentDbApiKey; ?>
+            <div class="user-info">
+                <h3>Vaše informácie</h3>
+                <p><strong>ID Používateľa (zo Session):</strong> <?php echo htmlspecialchars($userId ?? 'N/A'); ?></p>
+                <p><strong>Meno (z DB):</strong> <?php echo $username; ?></p>
+                <p><strong>Status (z DB):</strong> <span class="admin-status"><?php echo $isAdmin ? 'Administrátor' : 'Bežný užívateľ'; ?></span></p>
             </div>
 
-            <label for="sessionApiKeyDisplay">API kľúč uložený v session:</label>
-            <div id="sessionApiKeyDisplay" class="api-key-display">
-                <?php echo $sessionApiKey; ?>
-            </div>
+            <div class="api-key-section">
+                <h2>API kľúč</h2>
+                <label for="dbApiKeyDisplay">API kľúč uložený v databáze:</label>
+                <div id="dbApiKeyDisplay" class="api-key-display">
+                    <?php echo $currentDbApiKey; ?>
+                </div>
 
-            <form action="" method="post" class="api-key-actions">
-                <p>Kliknite pre vygenerovanie nového API kľúča. Starý bude neplatný.</p>
-                <button type="submit" name="change_api_key">Vygenerovať a uložiť nový API kľúč</button>
-            </form>
+                <label for="sessionApiKeyDisplay">API kľúč uložený v session:</label>
+                <div id="sessionApiKeyDisplay" class="api-key-display">
+                    <?php echo $sessionApiKey; ?>
+                </div>
+
+                <form action="" method="post" class="api-key-actions">
+                    <p>Kliknite pre vygenerovanie nového API kľúča. Starý bude neplatný.</p>
+                    <button type="submit" name="change_api_key">Vygenerovať a uložiť nový API kľúč</button>
+                </form>
+            </div>
         </div>
     </div>
 </body>
