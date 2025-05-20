@@ -15,7 +15,7 @@
 
 <body>
     <!-- Navigačný panel -->
-    <?php include 'navbar.php'; ?>
+    <?php include 'navbarPDFoperations.php'; ?>
 
     <h2>Number All PDF Pages</h2>
     <input type="file" id="pdfFile" accept="application/pdf" />

@@ -26,13 +26,13 @@ $base_url = '/zz/';
                     <a class="nav-link active" data-i18n="navbar.home">Domov</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" data-i18n="navbar.history">História</a>
+                    <a class="nav-link" href="frontend/pages/history.php" data-i18n="navbar.history">História</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" data-i18n="navbar.manual">Príručka</a>
+                    <a class="nav-link" href="frontend/pages/manual.php" data-i18n="navbar.manual">Príručka</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" data-i18n="navbar.profile">Profil</a>
+                    <a class="nav-link" href="frontend/pages/profile.php" data-i18n="navbar.profile">Profil</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#" data-i18n="navbar.logout">Odhlásiť</a>

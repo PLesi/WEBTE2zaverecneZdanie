@@ -15,7 +15,7 @@
 
 <body>
     <!-- Navigačný panel -->
-    <?php include 'navbar.php'; ?>
+    <?php include 'navbarPDFoperations.php'; ?>
 
     <div class="container">
         <h1>Password Protect PDF</h1>

@@ -15,7 +15,7 @@
 </head>
 <body>
     <!-- Navigation bar -->
-    <?php include 'navbar.php'; ?>
+    <?php include 'navbarPDFoperations.php'; ?>
 
     <!-- Main content -->
     <div class="hero-section">

@@ -14,7 +14,7 @@
 
 <body>
     <!-- Navigation bar -->
-    <?php include 'navbar.php'; ?>
+    <?php include 'navbarPDFoperations.php'; ?>
 
     <h2>Drag pages to rearrange order</h2>
     <input type="file" id="pdfFile" accept="application/pdf" />

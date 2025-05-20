@@ -14,7 +14,7 @@
 
 <body>
     <!-- Navigačný panel -->
-    <?php include 'navbar.php'; ?>
+    <?php include 'navbarPDFoperations.php'; ?>
 
     <h2>Convert JPG to PDF with Preview</h2>
 

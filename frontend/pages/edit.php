@@ -14,7 +14,7 @@
 
 <body>
     <!-- Navigačný panel -->
-    <?php include 'navbar.php'; ?>
+    <?php include 'navbarPDFoperations.php'; ?>
 
     <h1>PDF Editing</h1>
     <input type="file" id="pdf-upload" accept="application/pdf" />

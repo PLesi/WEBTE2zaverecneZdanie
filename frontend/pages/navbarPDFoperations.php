@@ -16,7 +16,7 @@
                     <a class="nav-link" href="manual.php" data-i18n="navbar.manual">Príručka</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="profil.php" data-i18n="navbar.profile">Profil</a>
+                    <a class="nav-link" href="profile.php" data-i18n="navbar.profile">Profil</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#" data-i18n="navbar.logout">Odhlásiť</a>

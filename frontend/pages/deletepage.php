@@ -14,7 +14,7 @@
 
 <body>
     <!-- Navigation bar -->
-    <?php include 'navbar.php'; ?>
+    <?php include 'navbarPDFoperations.php'; ?>
 
     <h2>Click on a page to delete it</h2>
     <input type="file" id="pdfFile" accept="application/pdf" />
