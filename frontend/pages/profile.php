@@ -208,38 +208,44 @@ $sessionApiKey = $_SESSION['api_key'] ?? 'Chýba v session'; // API kľúč aktu
     </nav>
     <div class="container d-flex justify-content-center align-items-center vh-100">
         <div class="col-md-5 hero-section">
-            <h2>Správa API kľúča</h2>
+            <h2 data-i18n="profile.title">Správa API kľúča</h2>
             <?php if (!empty($message)): ?>
                 <div class="message <?php echo strpos($message, 'úspešne') !== false ? 'success' : 'error'; ?>">
-                    <?php echo htmlspecialchars($message); ?>
+                    <span data-i18n="profile.message"><?php echo htmlspecialchars($message); ?></span>
                 </div>
             <?php endif; ?>
 
             <div class="user-info">
-                <h3>Vaše informácie</h3>
-                <p><strong>ID Používateľa (zo Session):</strong> <?php echo htmlspecialchars($userId ?? 'N/A'); ?></p>
-                <p><strong>Meno (z DB):</strong> <?php echo $username; ?></p>
-                <p><strong>Status (z DB):</strong> <span class="admin-status"><?php echo $isAdmin ? 'Administrátor' : 'Bežný užívateľ'; ?></span></p>
+                <h3 data-i18n="profile.user_info_title">Vaše informácie</h3>
+                <p><strong data-i18n="profile.user_id_label">ID Používateľa (zo Session):</strong> <?php echo htmlspecialchars($userId ?? 'N/A'); ?></p>
+                <p><strong data-i18n="profile.username_label">Meno (z DB):</strong> <?php echo $username; ?></p>
+                <p><strong data-i18n="profile.status_label">Status (z DB):</strong> <span class="admin-status" data-i18n="profile.status_admin"><?php echo $isAdmin ? 'Administrátor' : 'Bežný užívateľ'; ?></span></p>
             </div>
 
             <div class="api-key-section">
-                <h2>API kľúč</h2>
-                <label for="dbApiKeyDisplay">API kľúč uložený v databáze:</label>
+                <h2 data-i18n="profile.api_key_title">API kľúč</h2>
+                <label for="dbApiKeyDisplay" data-i18n="profile.api_key_db_label">API kľúč uložený v databáze:</label>
                 <div id="dbApiKeyDisplay" class="api-key-display">
                     <?php echo $currentDbApiKey; ?>
                 </div>
 
-                <label for="sessionApiKeyDisplay">API kľúč uložený v session:</label>
+                <label for="sessionApiKeyDisplay" data-i18n="profile.api_key_session_label">API kľúč uložený v session:</label>
                 <div id="sessionApiKeyDisplay" class="api-key-display">
                     <?php echo $sessionApiKey; ?>
                 </div>
 
                 <form action="" method="post" class="api-key-actions">
-                    <p>Kliknite pre vygenerovanie nového API kľúča. Starý bude neplatný.</p>
-                    <button type="submit" name="change_api_key">Vygenerovať a uložiť nový API kľúč</button>
+                    <p data-i18n="profile.api_key_warning">Kliknite pre vygenerovanie nového API kľúča. Starý bude neplatný.</p>
+                    <button type="submit" name="change_api_key" data-i18n="profile.generate_button">Vygenerovať a uložiť nový API kľúč</button>
                 </form>
             </div>
         </div>
     </div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- i18next -->
+    <script src="https://unpkg.com/i18next@23.15.1/dist/umd/i18next.min.js"></script>
+    <!-- custom JS -->
+    <script src="../assets/js/i18n.js"></script>
 </body>
 </html>

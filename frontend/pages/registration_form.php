@@ -98,6 +98,10 @@ unset($_SESSION['register_status']);
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- i18next -->
+<script src="https://unpkg.com/i18next@23.15.1/dist/umd/i18next.min.js"></script>
+<!-- custom JS -->
+<script src="../assets/js/i18n.js"></script>
 
 <script>
     document.getElementById('registerForm').addEventListener('submit', function(e) {
