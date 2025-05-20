@@ -22,7 +22,20 @@
                     'delete_page': 'Odstrániť stránku',
                     'split': 'Rozdeliť PDF',
                     'rearrange': 'Preskupiť stránky'
-                }
+                },
+                'footer.text': 'Webové technológie - PDF editor aplikácia',
+                'compress.title': 'Kompresia PDF',
+                'compress.description': 'Nahrajte PDF súbor a nastavte úroveň kompresie pre optimalizáciu veľkosti.',
+                'compress.drop_label': 'Presuňte PDF súbor sem alebo kliknite pre výber',
+                'compress.upload_label': 'Nahrať PDF:',
+                'compress.level_label': 'Úroveň kompresie (1-9):',
+                'compress.submit': 'Komprimovať',
+                'compress.preview_title': 'Náhľad komprimovaného PDF:',
+                'compress.download': 'Stiahnuť',
+                'compress.original_size': 'Pôvodná veľkosť: {{size}} KB',
+                'compress.compressed_size': 'Komprimovaná veľkosť: {{size}} KB',
+                'compress.error_no_file': 'Prosím, nahrajte PDF súbor.',
+                'compress.error_failed': 'Kompresia zlyhala.'
             }
         },
         en: {
@@ -47,7 +60,20 @@
                     'delete_page': 'Delete Page',
                     'split': 'Split PDF',
                     'rearrange': 'Rearrange Pages'
-                }
+                },
+                'footer.text': 'Web Technologies - PDF Editor Application',
+                'compress.title': 'PDF Compression',
+                'compress.description': 'Upload a PDF file and set the compression level to optimize its size.',
+                'compress.drop_label': 'Drag and drop a PDF file here or click to select',
+                'compress.upload_label': 'Upload PDF:',
+                'compress.level_label': 'Compression Level (1-9):',
+                'compress.submit': 'Compress',
+                'compress.preview_title': 'Compressed PDF Preview:',
+                'compress.download': 'Download',
+                'compress.original_size': 'Original Size: {{size}} KB',
+                'compress.compressed_size': 'Compressed Size: {{size}} KB',
+                'compress.error_no_file': 'Please upload a PDF file.',
+                'compress.error_failed': 'Compression failed.'
             }
         }
     };
