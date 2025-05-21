@@ -140,20 +140,6 @@ $sessionApiKey = $_SESSION['api_key'] ?? 'Chýba v session'; // API kľúč aktu
             color: #adb5bd;
             font-size: 0.9em;
         }
-        .api-key-actions button {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-            transition: background-color 0.3s ease;
-            margin-top: 15px;
-        }
-        .api-key-actions button:hover {
-            background-color: #0056b3;
-        }
         .message {
             margin-top: 20px;
             padding: 10px;
@@ -236,7 +222,7 @@ $sessionApiKey = $_SESSION['api_key'] ?? 'Chýba v session'; // API kľúč aktu
 
                 <form action="" method="post" class="api-key-actions">
                     <p data-i18n="profile.api_key_warning">Kliknite pre vygenerovanie nového API kľúča. Starý bude neplatný.</p>
-                    <button type="submit" name="change_api_key" data-i18n="profile.generate_button">Vygenerovať a uložiť nový API kľúč</button>
+                    <button class="btn btn-primary" type="submit" name="change_api_key" data-i18n="profile.generate_button">Vygenerovať a uložiť nový API kľúč</button>
                 </form>
             </div>
         </div>

@@ -80,7 +80,7 @@
         <p data-i18n="manual.rearrange.description">Na preskupenie stránok PDF súboru vyberte súbor a nastavte nové poradie stránok.</p>
     </div>
 
-    <button onclick="downloadPDF()">Uložiť ako PDF</button>
+    <button onclick="downloadPDF()" class="btn btn-primary">Uložiť ako PDF</button>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

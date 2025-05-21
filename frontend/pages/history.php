@@ -107,7 +107,7 @@
 </div>
 
 <div class="text-center">
-    <button onclick="exportToCSV()" data-i18n="history.export">Exportovať do CSV</button>
+    <button onclick="exportToCSV()" class="btn-primary" data-i18n="history.export">Exportovať do CSV</button>
 </div>
 
 <!-- Bootstrap JS -->
