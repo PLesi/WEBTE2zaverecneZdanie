@@ -42,7 +42,7 @@ $base_url = '/zz/';
                     <a class="nav-link" href="frontend/pages/profile.php" data-i18n="navbar.profile">Profil</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" data-i18n="navbar.logout">Odhlásiť</a>
+                    <a class="nav-link" href="logout.php" data-i18n="navbar.logout">Odhlásiť</a>
                 </li>
                 <li class="nav-item">
                     <button class="btn btn-outline-light ms-2" onclick="changeLanguage('sk')">SK</button>

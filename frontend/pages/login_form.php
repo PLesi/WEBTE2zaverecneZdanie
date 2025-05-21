@@ -4,10 +4,20 @@ $status = $_SESSION['login_status'] ?? '';
 unset($_SESSION['login_status']);
 
 if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
-    header("Location: index.php");
+    header("Location: ../../index.php");
     exit();
 }
 
+// Helper function for i18n translation in PHP
+function i18next_t($key) {
+    $translations = [
+        'login.error_empty' => 'Vyplňte všetky polia.',
+        'login.error_invalid' => 'Nesprávny email alebo heslo.',
+        'login.error_db' => 'Chyba databázy. Skúste znova neskôr.'
+    ];
+    
+    return $translations[$key] ?? $key;
+}
 ?>
 
 <!DOCTYPE html>
