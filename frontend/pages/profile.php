@@ -94,11 +94,62 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["change_api_key"]) && $
 ?>
 
 <?php
+require_once '../../config.php';
+
 $message = ""; // Správa pre používateľa
 $username = "N/A"; // Meno používateľa z DB
 $isAdmin = false;  // Admin status z DB
 $currentDbApiKey = "N/A"; // API kľúč aktuálne uložený v DB
 $sessionApiKey = $_SESSION['api_key'] ?? 'Chýba v session'; // API kľúč aktuálne v session
+$userId = $_SESSION['user_id'] ?? null;
+
+// Načítanie dát používateľa z DB pomocou ID zo session
+if ($userId) {
+    try {
+        $stmt = $pdo->prepare("SELECT username, is_admin, api_key FROM users WHERE id = :id");
+        $stmt->execute([':id' => $userId]);
+        $fetchedUserData = $stmt->fetch();
+
+        if ($fetchedUserData) {
+            $username = htmlspecialchars($fetchedUserData['username']);
+            $isAdmin = (bool)$fetchedUserData['is_admin'];
+            $currentDbApiKey = htmlspecialchars($fetchedUserData['api_key']);
+        } else {
+            $message = "Chyba: Používateľ s ID {$userId} sa nenašiel v databáze.";
+        }
+    } catch (PDOException $e) {
+        $message = "Chyba pri načítaní dát používateľa: " . $e->getMessage();
+    }
+}
+
+// Spracovanie admin kľúča
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit_admin_key"]) && $userId && !$isAdmin) {
+    $submittedAdminKey = trim($_POST["admin_key"]);
+    
+    try {
+        // Získanie správneho admin kľúča z databázy
+        $stmt = $pdo->prepare("SELECT admin_key FROM admin_key LIMIT 1");
+        $stmt->execute();
+        $result = $stmt->fetch();
+        
+        if ($result && $submittedAdminKey === $result['admin_key']) {
+            // Ak kľúč súhlasí, aktualizujeme používateľa na admina
+            $updateStmt = $pdo->prepare("UPDATE users SET is_admin = 1 WHERE id = :id");
+            $updateResult = $updateStmt->execute([':id' => $userId]);
+            
+            if ($updateResult) {
+                $isAdmin = true;
+                $message = "Gratulujeme! Boli ste povýšený na administrátora.";
+            } else {
+                $message = "Chyba pri aktualizácii admin práv.";
+            }
+        } else {
+            $message = "Nesprávny admin kľúč. Prosím, skúste znova.";
+        }
+    } catch (PDOException $e) {
+        $message = "Chyba pri overovaní admin kľúča: " . $e->getMessage();
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="sk">
@@ -233,6 +284,20 @@ $sessionApiKey = $_SESSION['api_key'] ?? 'Chýba v session'; // API kľúč aktu
                     <button class="btn btn-primary" type="submit" name="change_api_key" data-i18n="profile.generate_button">Vygenerovať a uložiť nový API kľúč</button>
                 </form>
             </div>
+            
+            <?php if (!$isAdmin): ?>
+            <div class="api-key-section">
+                <h2 data-i18n="profile.admin_key_title">Admin prístup</h2>
+                <p data-i18n="profile.admin_key_description" style="color: #f8f9fa; margin-bottom: 15px;">Zadajte admin kľúč pre získanie admin privilégií:</p>
+                
+                <form action="" method="post" class="admin-key-form">
+                    <div class="mb-3">
+                        <input type="password" class="form-control" id="adminKey" name="admin_key" placeholder="Zadajte admin kľúč" style="background-color: #495057; color: #f8f9fa; border-color: #6c757d;">
+                    </div>
+                    <button type="submit" name="submit_admin_key" class="btn btn-primary" data-i18n="profile.admin_key_submit">Overiť kľúč</button>
+                </form>
+            </div>
+            <?php endif; ?>
         </div>
     </div>
     <!-- Bootstrap JS -->
