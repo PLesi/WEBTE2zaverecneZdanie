@@ -31,6 +31,7 @@
         <!-- Chybové hlásenie -->
         <div id="errorMessage">
             <span id="errorText"></span>
+            <button type="button" class="close-btn" onclick="hideErrorMessage()">×</button>
         </div>
 
         <div class="row justify-content-center">
