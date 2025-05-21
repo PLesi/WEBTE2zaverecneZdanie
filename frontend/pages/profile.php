@@ -307,7 +307,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit_admin_key"]) &&
             <h2 data-i18n="profile.title">Správa API kľúča</h2>
             <?php if (!empty($message)): ?>
                 <div class="message <?php echo strpos($message, 'úspešne') !== false ? 'success' : 'error'; ?>">
-                    <span data-i18n="profile.message"><?php echo htmlspecialchars($message); ?></span>
+                    <span><?php echo htmlspecialchars($message); ?></span>
                 </div>
             <?php endif; ?>
 
