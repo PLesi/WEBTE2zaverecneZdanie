@@ -314,7 +314,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit_admin_key"]) &&
             <div class="user-info">
                 <h3 data-i18n="profile.user_info_title">Vaše informácie</h3>
                 <p><strong data-i18n="profile.username_label">Meno:</strong> <?php echo $username; ?></p>
-                <p><strong data-i18n="profile.status_label">Status:</strong> <span class="admin-status" data-i18n="profile.status_admin"><?php echo $isAdmin ? 'Administrátor' : 'Bežný užívateľ'; ?></span></p>
+                <?php if ($isAdmin): ?>
+                <p><strong data-i18n="profile.status_label">Status:</strong> <span class="admin-status" data-i18n="profile.status_admin">Administrátor</span></p>
+                <?php endif; ?>
             </div>
 
             <div class="api-key-section">
