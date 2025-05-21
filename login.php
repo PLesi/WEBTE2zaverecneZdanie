@@ -16,11 +16,21 @@ try {
     $stmt->bindParam("email", $email);
     $stmt->execute();
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
+    $stmt = $connm->prepare("SELECT apy_key FROM apy_keys WHERE user_id = :user_id");
+    $stmt->bindParam("user_id", $user['id']);
+    $stmt->execute();
+    $api_key = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($api_key) {
+        $_SESSION['api_key'] = $api_key['apy_key'];
+    } else {
+        $_SESSION['api_key'] = null;
+    }
+    
     if ($user && password_verify($password, $user['password'])) {
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['login_status'] = "ok";
         $_SESSION['logged_in'] = true;
+
         header("Location: index.php");
         exit();
     } else {

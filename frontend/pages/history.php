@@ -3,6 +3,9 @@
     if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
         header("Location: login_form.php");
     } 
+    if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] != true) {
+        header("Location: ../../index.php");
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
