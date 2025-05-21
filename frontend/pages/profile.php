@@ -107,12 +107,12 @@ $userId = $_SESSION['user_id'] ?? null;
 if ($userId) {
     try {
         // Get user data from users table
-        $stmt = $pdo->prepare("SELECT username, is_admin FROM users WHERE id = :id");
+        $stmt = $conn->prepare("SELECT username, is_admin FROM users WHERE id = :id");
         $stmt->execute([':id' => $userId]);
         $fetchedUserData = $stmt->fetch();
 
         // Get API key from api_keys table
-        $apiKeyStmt = $pdo->prepare("SELECT api_key FROM api_keys WHERE user_id = :user_id");
+        $apiKeyStmt = $conn->prepare("SELECT api_key FROM api_keys WHERE user_id = :user_id");
         $apiKeyStmt->execute([':user_id' => $userId]);
         $apiKeyData = $apiKeyStmt->fetch();
 
@@ -136,20 +136,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["change_api_key"]) && $
         $newApiKey = bin2hex($randomBytes);
         
         // Check if user already has an API key in the api_keys table
-        $checkStmt = $pdo->prepare("SELECT id FROM api_keys WHERE user_id = :user_id");
+        $checkStmt = $conn->prepare("SELECT id FROM api_keys WHERE user_id = :user_id");
         $checkStmt->execute([':user_id' => $userId]);
         $existingKey = $checkStmt->fetch();
         
         if ($existingKey) {
             // Update existing API key
-            $updateStmt = $pdo->prepare("UPDATE api_keys SET api_key = :api_key WHERE user_id = :user_id");
+            $updateStmt = $conn->prepare("UPDATE api_keys SET api_key = :api_key WHERE user_id = :user_id");
             $result = $updateStmt->execute([
                 ':api_key' => $newApiKey,
                 ':user_id' => $userId
             ]);
         } else {
             // Insert new API key
-            $insertStmt = $pdo->prepare("INSERT INTO api_keys (user_id, api_key) VALUES (:user_id, :api_key)");
+            $insertStmt = $conn->prepare("INSERT INTO api_keys (user_id, api_key) VALUES (:user_id, :api_key)");
             $result = $insertStmt->execute([
                 ':user_id' => $userId,
                 ':api_key' => $newApiKey
@@ -178,13 +178,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit_admin_key"]) &&
     
     try {
         // Získanie správneho admin kľúča z databázy
-        $stmt = $pdo->prepare("SELECT admin_key FROM admin_key LIMIT 1");
+        $stmt = $conn->prepare("SELECT admin_key FROM admin_key LIMIT 1");
         $stmt->execute();
         $result = $stmt->fetch();
         
         if ($result && $submittedAdminKey === $result['admin_key']) {
             // Ak kľúč súhlasí, aktualizujeme používateľa na admina
-            $updateStmt = $pdo->prepare("UPDATE users SET is_admin = 1 WHERE id = :id");
+            $updateStmt = $conn->prepare("UPDATE users SET is_admin = 1 WHERE id = :id");
             $updateResult = $updateStmt->execute([':id' => $userId]);
             
             if ($updateResult) {
