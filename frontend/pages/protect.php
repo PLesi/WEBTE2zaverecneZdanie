@@ -1,8 +1,10 @@
 <?php
+
 session_start();
 if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
     header("Location: login_form.php");
 }
+$apiKey = $_SESSION['api_key'] ?? null;
 ?>
 
 <!DOCTYPE html>
@@ -50,9 +52,6 @@ if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
             outline: none;
             border-color: #837ee3;
         }
-        #originalSizeDisplay {
-            margin-left: 10px;
-        }
     </style>
 </head>
 
@@ -94,12 +93,9 @@ if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
         const form = document.getElementById('pdfProtectForm');
         const pdfInput = document.getElementById('pdfInput');
         const passwordInput = document.getElementById('password');
-        const downloadBtn = document.getElementById('downloadBtn');
         const fileNameDisplay = document.getElementById('fileNameDisplay');
         const errorMessage = document.getElementById('errorMessage');
         const errorText = document.getElementById('errorText');
-
-        let protectedBlob = null;
 
         function showErrorMessage(message) {
             if (errorText) errorText.textContent = message;
@@ -116,16 +112,11 @@ if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
             try {
                 if (file && file.type === 'application/pdf') {
                     if (fileNameDisplay) fileNameDisplay.textContent = file.name;
-                    if (originalSizeDisplay) {
-                        const sizeKB = (file.size / 1024).toFixed(2);
-                        originalSizeDisplay.textContent = i18next.t('protect.original_size', { size: sizeKB });
-                    }
                     const dataTransfer = new DataTransfer();
                     dataTransfer.items.add(file);
                     pdfInput.files = dataTransfer.files;
                 } else {
                     if (fileNameDisplay) fileNameDisplay.textContent = '';
-                    if (originalSizeDisplay) originalSizeDisplay.textContent = '';
                     showErrorMessage(i18next.t('protect.error_missing_input') || 'Neplatný súbor, vyberte PDF');
                 }
             } catch (err) {
@@ -154,30 +145,27 @@ if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
             const formData = new FormData();
             formData.append('file', file);
             formData.append('password', password);
-
+            formData.append('apiKey', <?= json_encode($apiKey) ?> );
             try {
-                const response = await fetch('http://node75.webte.fei.stuba.sk/api/pdf/protect', {
+                const response = await fetch('https://node75.webte.fei.stuba.sk/api/pdf/protect', {
                     method: 'POST',
                     body: formData
                 });
 
                 if (!response.ok) throw new Error(i18next.t('protect.error_protection_failed'));
 
-                protectedBlob = await response.blob();
+                const protectedBlob = await response.blob();
+
+                // Automatically trigger download after protection
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(protectedBlob);
+                a.download = 'protected.pdf';
+                a.click();
+                URL.revokeObjectURL(a.href);
+
             } catch (err) {
                 showErrorMessage(i18next.t('protect.error', { error: err.message }) || 'Chyba: ' + err.message);
             }
-        });
-
-        downloadBtn.addEventListener('click', () => {
-            if (!protectedBlob) {
-                showErrorMessage(i18next.t('protect.error_no_protected_pdf') || 'Nie je k dispozícii chránené PDF');
-                return;
-            }
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(protectedBlob);
-            a.download = 'protected.pdf';
-            a.click();
         });
     </script>
 </body>

@@ -1,5 +1,8 @@
 <?php
-require_once('../../vendor/autoload.php'); //path to the autoload.php file 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+require_once('../vendor/autoload.php'); //path to the autoload.php file 
 
 if(isset($_POST['pdf_content'])){
     $htmlContent = $_POST['pdf_content'];

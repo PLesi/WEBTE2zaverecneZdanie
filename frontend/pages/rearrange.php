@@ -3,6 +3,7 @@ session_start();
 if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
     header("Location: login_form.php");
 }
+$apiKey = $_SESSION['api_key'] ?? null;
 ?>
 
 <!DOCTYPE html>
@@ -143,10 +144,10 @@ if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
                 const formData = new FormData();
                 formData.append('file', pdfFileInput.files[0]);
                 newOrder.forEach(pageNum => formData.append('order', pageNum));
-                formData.append('apiKey', 'asd'); // potom api kluce
+               formData.append('apiKey', <?= json_encode($apiKey) ?> );// potom api kluce
                 formData.append('platform', 'frontend');
 
-                const response = await fetch('http://node75.webte.fei.stuba.sk/api/pdf/rearrange', {
+                const response = await fetch('https://node75.webte.fei.stuba.sk/api/pdf/rearrange', {
                     method: 'POST',
                     body: formData
                 });

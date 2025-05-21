@@ -1,8 +1,10 @@
-<?php
+<?php 
     session_start();
     if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
         header("Location: login_form.php");
     }
+        $apiKey = $_SESSION['api_key'] ?? null;
+
 ?>
 <!DOCTYPE html>
 <html lang="sk">
@@ -163,11 +165,11 @@
 
         const formData = new FormData();
         formData.append('file', file);
-        formData.append('apiKey', 'asd'); // Replace with real key if needed
+        formData.append('apiKey', <?= json_encode($apiKey) ?> ); // Replace with real key if needed
         formData.append('platform', 'frontend');
 
         try {
-            const response = await fetch('http://node75.webte.fei.stuba.sk/api/pdf/jpgToPdf', {
+            const response = await fetch('https://node75.webte.fei.stuba.sk/api/pdf/jpgToPdf', {
                 method: 'POST',
                 body: formData
             });

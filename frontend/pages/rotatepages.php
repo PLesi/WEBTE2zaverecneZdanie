@@ -3,6 +3,7 @@ session_start();
 if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
     header("Location: login_form.php");
 }
+$apiKey = $_SESSION['api_key'] ?? null;
 ?>
 
 <!DOCTYPE html>
@@ -127,11 +128,11 @@ if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
             const formData = new FormData();
             formData.append('file', uploadedFile);
             formData.append('degree', angle);
-            formData.append('apiKey', 'asd'); // Replace with actual API key
+            formData.append('apiKey', <?= json_encode($apiKey) ?> );// Replace with actual API key
             formData.append('platform', 'frontend');
 
             try {
-                const response = await fetch('http://node75.webte.fei.stuba.sk/api/pdf/rotatePages', {
+                const response = await fetch('https://node75.webte.fei.stuba.sk/api/pdf/rotatePages', {
                     method: 'POST',
                     body: formData
                 });

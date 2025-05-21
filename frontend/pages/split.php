@@ -3,6 +3,7 @@ session_start();
 if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
     header("Location: login_form.php");
 }
+$apiKey = $_SESSION['api_key'] ?? null;
 ?>
 
 <!DOCTYPE html>
@@ -122,14 +123,14 @@ if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
         }
 
         const formData = new FormData(form);
-        formData.append('apiKey', 'asd'); // Replace with actual key
+        formData.append('apiKey', <?= json_encode($apiKey) ?> ); // Replace with actual key
         formData.append('platform', 'frontend');
-
+          formData.append('file', file);
         try {
             uploadBtn.disabled = true;
             uploadBtn.textContent = i18next.t('split.uploading');
 
-            const response = await fetch('http://node75.webte.fei.stuba.sk/api/pdf/split', {
+            const response = await fetch('https://node75.webte.fei.stuba.sk/api/pdf/split', {
                 method: 'POST',
                 body: formData
             });

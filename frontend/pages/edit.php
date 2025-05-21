@@ -3,6 +3,7 @@
     if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
         header("Location: login_form.php");
     } 
+    $apiKey = $_SESSION['api_key'] ?? null;
 ?>
 <!DOCTYPE html>
 <html lang="sk">
@@ -487,8 +488,8 @@
         const formData = new FormData();
         formData.append("pdf", fileInput.files[0]);
         formData.append("annotation", dataURLtoBlob(annotationBlob));
-
-        fetch("http://node75.webte.fei.stuba.sk/api/pdf/edit", {
+        formData.append('apiKey', <?= json_encode($apiKey) ?> ); 
+        fetch("https://node75.webte.fei.stuba.sk/api/pdf/edit", {
             method: "POST",
             body: formData
         }).then(res => {

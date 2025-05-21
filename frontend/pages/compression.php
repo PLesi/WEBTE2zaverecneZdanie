@@ -1,8 +1,11 @@
-<?php
+<?php 
     session_start();
+
     if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
         header("Location: login_form.php");
     } 
+    $apiKey = $_SESSION['api_key'] ?? null;
+    
 ?>
 
 <!DOCTYPE html>
@@ -145,13 +148,12 @@
         }
 
         const level = compressionLevel.value;
-
         const formData = new FormData();
         formData.append('file', file);
         formData.append('level', level);
-
+        formData.append('apiKey', <?= json_encode($apiKey) ?>);
         try {
-            const response = await fetch('http://node75.webte.fei.stuba.sk/api/pdf/compressNew', {
+            const response = await fetch('https://node75.webte.fei.stuba.sk/api/pdf/compress', {
                 method: 'POST',
                 body: formData
             });

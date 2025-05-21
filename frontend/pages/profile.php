@@ -1,5 +1,9 @@
 
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 session_start();
 if (isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] === true) {
 } else {
@@ -9,7 +13,7 @@ if (isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] === true) {
 }
 
 
-require_once 'config.php';
+require_once '../../config.php';
 
 function generateApiKey(): string
 {
@@ -37,7 +41,7 @@ $userId = $_SESSION['user_id'] ?? null;
 
 if ($userId) {
     try {
-        $stmt = $pdo->prepare("SELECT username, is_admin FROM users WHERE id = :id");
+        $stmt = $conn->prepare("SELECT username, is_admin FROM users WHERE id = :id");
         $stmt->execute([':id' => $userId]);
         $fetchedUserData = $stmt->fetch();
 
@@ -66,20 +70,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["change_api_key"]) && $
     if (!empty($newApiKey)) {
         try {
             // Aktualizácia API kľúča v tabuľke api_keys pre používateľa zisteného zo session
-            $checkStmt = $pdo->prepare("SELECT id FROM api_keys WHERE user_id = :user_id");
+            $checkStmt = $conn->prepare("SELECT id FROM api_keys WHERE user_id = :user_id");
             $checkStmt->execute([':user_id' => $userId]);
             $existingKey = $checkStmt->fetch();
             
             if ($existingKey) {
                 // Update existing API key
-                $stmt = $pdo->prepare("UPDATE api_keys SET api_key = :new_api_key WHERE user_id = :user_id");
+                $stmt = $conn->prepare("UPDATE api_keys SET api_key = :new_api_key WHERE user_id = :user_id");
                 $result = $stmt->execute([
                     ':new_api_key' => $newApiKey,
                     ':user_id' => $userId
                 ]);
             } else {
                 // Insert new API key
-                $stmt = $pdo->prepare("INSERT INTO api_keys (user_id, api_key) VALUES (:user_id, :new_api_key)");
+                $stmt = $conn->prepare("INSERT INTO api_keys (user_id, api_key) VALUES (:user_id, :new_api_key)");
                 $result = $stmt->execute([
                     ':user_id' => $userId,
                     ':new_api_key' => $newApiKey

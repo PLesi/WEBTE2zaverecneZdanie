@@ -3,6 +3,7 @@ session_start();
 if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
     header("Location: login_form.php");
 }
+  $apiKey = $_SESSION['api_key'] ?? null;
 ?>
 <!DOCTYPE html>
 <html lang="sk">
@@ -167,10 +168,10 @@ if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
             const formData = new FormData();
             formData.append('file', file);
             formData.append('page', pageToRemove);
-            formData.append('apiKey', 'asd'); // Replace with your actual API key
+            formData.append('apiKey', <?= json_encode($apiKey) ?> ); // Replace with your actual API key
             formData.append('platform', 'frontend');
 
-            const response = await fetch('http://node75.webte.fei.stuba.sk/api/pdf/removePage', {
+            const response = await fetch('https://node75.webte.fei.stuba.sk/api/pdf/removePage', {
                 method: 'POST',
                 body: formData
             });

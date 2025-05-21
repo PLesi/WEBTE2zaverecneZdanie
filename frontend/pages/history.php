@@ -43,10 +43,8 @@
             margin: 0 5px;
         }
         .btn-primary {
-            background-color: #007bff;
         }
         .btn-primary:hover {
-            background-color: #0056b3;
         }
         .btn-danger {
             background-color: #dc3545;
@@ -135,8 +133,8 @@
     </table>
 </div>
 
-<div class="text-center">
-    <button onclick="exportToCSV()" class="btn-primary me-2" data-i18n="history.export">Exportovať do CSV</button>
+<div class="text-center">                 
+    <button onclick="exportToCSV()" class="btn btn-primary me-2" data-i18n="history.export">Exportovať do CSV</button>
     <button onclick="clearHistory()" class="btn-danger" data-i18n="history.clear">Vymazať históriu</button>
 </div>
 

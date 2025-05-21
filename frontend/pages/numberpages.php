@@ -3,6 +3,7 @@ session_start();
 if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
     header("Location: login_form.php");
 }
+$apiKey = $_SESSION['api_key'] ?? null;
 ?>
 <!DOCTYPE html>
 <html lang="sk">
@@ -223,7 +224,7 @@ if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
         const formData = new FormData();
         formData.append('file', uploadedFile);
         formData.append('position', position);
-        formData.append('apiKey', 'asd'); // Replace with actual API key
+        formData.append('apiKey', <?= json_encode($apiKey) ?> ); // Replace with actual API key
         formData.append('fontSize', fontSize);
         formData.append('platform', 'frontend');
 
@@ -231,7 +232,7 @@ if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
             numberBtn.disabled = true;
             numberBtn.textContent = i18next.t('number.numbering');
 
-            const response = await fetch('http://node75.webte.fei.stuba.sk/api/pdf/numberPages', {
+            const response = await fetch('https://node75.webte.fei.stuba.sk/api/pdf/numberPages', {
                 method: 'POST',
                 body: formData
             });
@@ -282,12 +283,12 @@ if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
 
             const pageItem = document.createElement('div');
             pageItem.className = 'pageItem';
-            pageItem.style.cursor = 'pointer';
             pageItem.appendChild(canvas);
             pageItem.setAttribute('data-page-number', i);
 
             // Show modal on hover
-            pageItem.addEventListener('click', () => showModal(i));
+            pageItem.addEventListener('mouseenter', () => showModal(i));
+            pageItem.addEventListener('mouseleave', () => hideModal());
 
             pageList.appendChild(pageItem);
         }

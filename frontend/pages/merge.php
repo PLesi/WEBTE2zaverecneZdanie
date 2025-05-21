@@ -3,6 +3,7 @@
     if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
         header("Location: login_form.php");
     } 
+      $apiKey = $_SESSION['api_key'] ?? null;
 ?>
 
 <!DOCTYPE html>
@@ -155,14 +156,14 @@
         const formData = new FormData();
         formData.append('file1', file1);
         formData.append('file2', file2);
-        formData.append('apiKey', 'asd');
+        formData.append('apiKey', <?= json_encode($apiKey) ?> );
         formData.append('platform', 'frontend');
 
         try {
             mergeBtn.disabled = true;
             mergeBtn.textContent = i18next.t('merge.merging');
 
-            const response = await fetch('http://node75.webte.fei.stuba.sk/api/pdf/merge', {
+            const response = await fetch('https://node75.webte.fei.stuba.sk/api/pdf/merge', {
                 method: 'POST',
                 body: formData
             });
