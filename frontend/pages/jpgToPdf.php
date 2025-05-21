@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sk">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Convert JPG to PDF with Preview</title>
+    <title data-i18n="operations.jpg_to_pdf">JPG do PDF</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
@@ -15,18 +15,20 @@
     <!-- Navigačný panel -->
     <?php include 'navbarPDFoperations.php'; ?>
 
-    <h2>Convert JPG to PDF with Preview</h2>
+    <div class="content-section">
+        <h2 data-i18n="jpg_to_pdf.title">Convert JPG to PDF with Preview</h2>
 
-    <label for="jpgFile">Select JPG file:</label>
-    <input type="file" id="jpgFile" accept="image/jpeg" />
+        <label for="jpgFile" data-i18n="jpg_to_pdf.label_select">Select JPG file:</label>
+        <input type="file" id="jpgFile" accept="image/jpeg" />
 
-    <img id="imagePreview" alt="Image preview" style="display:none" />
+        <img id="imagePreview" alt="Image preview" style="display:none" />
 
-    <button id="convertBtn" disabled>Convert to PDF</button>
-    <div id="message"></div>
+        <button id="convertBtn" disabled data-i18n="jpg_to_pdf.convert_button">Convert to PDF</button>
+        <div id="message"></div>
 
-    <img id="pdfPreview" alt="PDF preview" style="display:none" />
-    <button id="downloadBtn">Download PDF</button>
+        <embed id="pdfPreview" type="application/pdf" style="display:none" />
+        <button id="downloadBtn" style="display:none" data-i18n="jpg_to_pdf.download_button">Download PDF</button>
+    </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

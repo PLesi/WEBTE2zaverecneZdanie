@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sk">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Merge PDFs</title>
+    <title data-i18n="operations.merge">Spojiť PDF</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
@@ -15,17 +15,15 @@
     <!-- Navigačný panel -->
     <?php include 'navbarPDFoperations.php'; ?>
 
-    <h2>Merge Two PDF Files</h2>
+    <h2 data-i18n="merge.title">Spojiť dva PDF súbory</h2>
 
-    <label for="file1">Select first PDF:</label>
+    <label for="file1" data-i18n="merge.label_file1">Vyberte prvý PDF:</label>
     <input type="file" id="file1" accept="application/pdf" />
 
-    <label for="file2">Select second PDF:</label>
+    <label for="file2" data-i18n="merge.label_file2">Vyberte druhý PDF:</label>
     <input type="file" id="file2" accept="application/pdf" />
 
-
-
-    <button id="mergeBtn">Merge PDFs</button>
+    <button id="mergeBtn" data-i18n="merge.merge_button">Spojiť PDF</button>
 
     <div id="message"></div>
 

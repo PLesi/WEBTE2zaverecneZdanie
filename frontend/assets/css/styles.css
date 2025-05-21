@@ -2,6 +2,12 @@ body {
     background-color: #1c1b23;
     color: #fff2f2;
 }
+
+input{
+    background-color: #47464d;
+    color: #f8f9fa;
+    border-color: #495057;
+}
 .navbar-dark {
     background-color: #191920;
 }
@@ -21,6 +27,12 @@ body {
     border-color: #b4acee;
     color: #313038;
 }
+
+.btn-primary:after {
+    box-shadow: 0 0 0 0.2rem rgba(131, 126, 227, 0.5);
+    background-color: #837ee3;
+}
+
 .operation-btn {
     width: 100%;
     margin-bottom: 10px;

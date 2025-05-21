@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sk">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Number PDF Pages</title>
+    <title data-i18n="operations.number">Číslovať stránky</title>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -17,20 +17,20 @@
     <!-- Navigačný panel -->
     <?php include 'navbarPDFoperations.php'; ?>
 
-    <h2>Number All PDF Pages</h2>
+    <h2 data-i18n="number.title">Číslovať stránky</h2>
     <input type="file" id="pdfFile" accept="application/pdf" />
 
     <div class="controls">
-        <label for="positionSelect">Position of numbering:</label>
+        <label for="positionSelect" data-i18n="number.label_position">Pozícia číslovania:</label>
         <select id="positionSelect" default="bottomRight">
-            <option value="bottomRight">Bottom right</option>
-            <option value="bottomLeft">Bottom left</option>
-            <option value="topLeft">Top left</option>
-            <option value="topRight">Top right</option>
+            <option value="bottomRight" data-i18n="number.option_bottomRight">Spodná pravá</option>
+            <option value="bottomLeft" data-i18n="number.option_bottomLeft">Spodná ľavá</option>
+            <option value="topLeft" data-i18n="number.option_topLeft">Horná ľavá</option>
+            <option value="topRight" data-i18n="number.option_topRight">Horná pravá</option>
         </select>
-        <input type="number" id="fontSize" placeholder="Font size" min="8" max="42" value="13" />
-        <button id="numberBtn">Number pages</button>
-        <button id="downloadBtn">Download numbered PDF</button>
+        <input type="number" id="fontSize" placeholder="Veľkosť písma" min="8" max="42" value="13" />
+        <button id="numberBtn" data-i18n="number.number_button">Číslovať stránky</button>
+        <button id="downloadBtn" style="display:none" data-i18n="number.download_button">Stiahnuť číslované PDF</button>
     </div>
 
     <div id="pageList"></div>
@@ -76,7 +76,7 @@
         pdfFileInput.addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if (!file || file.type !== 'application/pdf') {
-                alert('Please select a valid PDF.');
+                alert(i18next.t('number.error_invalid_file'));
                 return;
             }
             uploadedFile = file;
@@ -86,7 +86,7 @@
 
         numberBtn.addEventListener('click', async () => {
             if (!uploadedFile) {
-                alert('Please upload a PDF first.');
+                alert(i18next.t('number.error_no_file'));
                 return;
             }
 
@@ -107,7 +107,7 @@
 
                 if (!response.ok) {
                     const errorText = await response.text();
-                    alert('Error numbering PDF: ' + errorText);
+                    alert(i18next.t('number.error_numbering', { error: errorText }));
                     return;
                 }
 
@@ -120,7 +120,7 @@
                 await renderPdf(await blob.arrayBuffer());
                 downloadBtn.style.display = 'inline-block';
             } catch (err) {
-                alert('Numbering failed: ' + err.message);
+                alert(i18next.t('number.error_failed', { error: err.message }));
             }
         });
 
@@ -198,7 +198,7 @@
 
         downloadBtn.addEventListener('click', () => {
             if (!numberedPdfBlobUrl) {
-                alert('No numbered PDF available to download.');
+                alert(i18next.t('number.error_no_numbered_pdf'));
                 return;
             }
 

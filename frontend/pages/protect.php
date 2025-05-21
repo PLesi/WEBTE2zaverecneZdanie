@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sk">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>PDF-protect</title>
+    <title data-i18n="operations.protect">Pridať heslo</title>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -18,21 +18,19 @@
     <?php include 'navbarPDFoperations.php'; ?>
 
     <div class="container">
-        <h1>Password Protect PDF</h1>
+        <h1 data-i18n="protect.title">Password Protect PDF</h1>
         <form id="pdfProtectForm" method="post" enctype="multipart/form-data">
-            <label for="pdfInput">Upload PDF:</label><br />
+            <label for="pdfInput" data-i18n="protect.label_pdf">Nahrať PDF:</label><br />
             <input type="file" id="pdfInput" accept="application/pdf" required /><br />
 
-            <label for="password">Enter Password:</label><br />
+            <label for="password" data-i18n="protect.label_password">Zadať heslo:</label><br />
             <input type="password" id="password" required /><br />
 
-            <button id="downloadBtn" type="submit">Download protected PDF</button>
+            <button id="downloadBtn" type="submit" data-i18n="protect.download_button">Stiahnuť chránené PDF</button>
         </form>
-
-
     </div>
 
-    <footer>Webove technologie - Pdf editor application</footer>
+    <footer data-i18n="footer.text">Webove technologie - Pdf editor application</footer>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -52,7 +50,7 @@
             const file = pdfInput.files[0];
             if (file) {
                 const sizeKB = (file.size / 1024).toFixed(2);
-                originalSizeText.innerText = `Original Size: ${sizeKB} KB`;
+                originalSizeText.innerText = i18next.t('protect.original_size', { size: sizeKB });
             } else {
                 originalSizeText.innerText = '';
             }
@@ -64,7 +62,7 @@
             const file = pdfInput.files[0];
             const password = passwordInput.value;
 
-            if (!file || !password) return alert('Please upload a PDF and enter a password.');
+            if (!file || !password) return alert(i18next.t('protect.error_missing_input'));
 
             const formData = new FormData();
             formData.append('file', file);
@@ -76,16 +74,16 @@
                     body: formData
                 });
 
-                if (!response.ok) throw new Error('Password protection failed');
+                if (!response.ok) throw new Error(i18next.t('protect.error_protection_failed'));
 
                 protectedBlob = await response.blob();
             } catch (err) {
-                alert(err.message);
+                alert(i18next.t('protect.error', { error: err.message }));
             }
         });
 
         downloadBtn.addEventListener('click', () => {
-            if (!protectedBlob) return;
+            if (!protectedBlob) return alert(i18next.t('protect.error_no_protected_pdf'));
             const a = document.createElement('a');
             a.href = URL.createObjectURL(protectedBlob);
             a.download = 'protected.pdf';
