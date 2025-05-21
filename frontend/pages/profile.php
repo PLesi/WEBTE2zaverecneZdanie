@@ -4,7 +4,7 @@ session_start();
 if (isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] === true) {
 } else {
     // Ak nie je používateľ prihlásený, presmerujeme ho na prihlasovaciu stránku
-    header("Location: frontend/pages/login_form.php");
+    header("Location: login_form.php");
     exit();
 }
 
@@ -189,6 +189,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit_admin_key"]) &&
             
             if ($updateResult) {
                 $isAdmin = true;
+                $_SESSION['is_admin'] = true; // Nastavíme admin status do session
                 $message = "Gratulujeme! Boli ste povýšený na administrátora.";
             } else {
                 $message = "Chyba pri aktualizácii admin práv.";
@@ -291,7 +292,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit_admin_key"]) &&
                         <a class="nav-link active" data-i18n="navbar.profile">Profil</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" data-i18n="navbar.logout">Odhlásiť</a>
+                        <a class="nav-link" href="../../logout.php" data-i18n="navbar.logout">Odhlásiť</a>
                     </li>
                     <li class="nav-item">
                         <button class="btn btn-outline-light ms-2" onclick="changeLanguage('sk')">SK</button>
@@ -312,9 +313,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit_admin_key"]) &&
 
             <div class="user-info">
                 <h3 data-i18n="profile.user_info_title">Vaše informácie</h3>
-                <p><strong data-i18n="profile.user_id_label">ID Používateľa (zo Session):</strong> <?php echo htmlspecialchars($userId ?? 'N/A'); ?></p>
-                <p><strong data-i18n="profile.username_label">Meno (z DB):</strong> <?php echo $username; ?></p>
-                <p><strong data-i18n="profile.status_label">Status (z DB):</strong> <span class="admin-status" data-i18n="profile.status_admin"><?php echo $isAdmin ? 'Administrátor' : 'Bežný užívateľ'; ?></span></p>
+                <p><strong data-i18n="profile.username_label">Meno:</strong> <?php echo $username; ?></p>
+                <p><strong data-i18n="profile.status_label">Status:</strong> <span class="admin-status" data-i18n="profile.status_admin"><?php echo $isAdmin ? 'Administrátor' : 'Bežný užívateľ'; ?></span></p>
             </div>
 
             <div class="api-key-section">
@@ -337,14 +337,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit_admin_key"]) &&
             
             <?php if (!$isAdmin): ?>
             <div class="api-key-section">
-                <h2 data-i18n="profile.admin_key_title">Admin prístup</h2>
-                <p data-i18n="profile.admin_key_description" style="color: #f8f9fa; margin-bottom: 15px;">Zadajte admin kľúč pre získanie admin privilégií:</p>
+                <h2>Admin prístup</h2>
+                <p style="color: #f8f9fa; margin-bottom: 15px;">Zadajte admin kľúč pre získanie admin privilégií:</p>
                 
                 <form action="" method="post" class="admin-key-form">
                     <div class="mb-3">
                         <input type="password" class="form-control" id="adminKey" name="admin_key" placeholder="Zadajte admin kľúč" style="background-color: #495057; color: #f8f9fa; border-color: #6c757d;">
                     </div>
-                    <button type="submit" name="submit_admin_key" class="btn btn-primary" data-i18n="profile.admin_key_submit">Overiť kľúč</button>
+                    <button type="submit" name="submit_admin_key" class="btn btn-primary">Overiť kľúč</button>
                 </form>
             </div>
             <?php endif; ?>
