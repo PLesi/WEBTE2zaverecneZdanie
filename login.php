@@ -31,7 +31,7 @@ try {
         $_SESSION['login_status'] = "ok";
         $_SESSION['logged_in'] = true;
 
-        header("Location: ../../index.php");
+        header("Location: index.php");
         exit();
     } else {
         $_SESSION['login_status'] = "invalid";
