@@ -1,5 +1,13 @@
 
 <?php
+session_start();
+if (isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] === true) {
+} else {
+    // Ak nie je používateľ prihlásený, presmerujeme ho na prihlasovaciu stránku
+    header("Location: frontend/pages/login_form.php");
+    exit();
+}
+
 /*   NEMAZAŤ
 session_start(); 
 

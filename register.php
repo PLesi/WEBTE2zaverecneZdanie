@@ -56,6 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION["api_key"] = $apiKey;
         $_SESSION["register_status"] = "ok";
         $_SESSION["login_status"] = "ok";
+        $_SESSION["logged_in"] = true;
         $_SESSION["username"] = $username;
         header("Location: index.php");                                                                                                                                                                                                                                                                                                                                                                                                                                                  
         exit();
