@@ -1,10 +1,12 @@
 <?php 
     session_start();
-    if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
+    if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] !== true) {
         header("Location: login_form.php");
+        exit();
     } 
-    if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] != true) {
+    if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
         header("Location: ../../index.php");
+        exit();
     }
 ?>
 <!DOCTYPE html>
@@ -34,14 +36,23 @@
         }
         button {
             padding: 10px 15px;
-            background-color: #007bff;
             color: white;
             border: none;
             cursor: pointer;
             border-radius: 5px;
+            margin: 0 5px;
         }
-        button:hover {
+        .btn-primary {
+            background-color: #007bff;
+        }
+        .btn-primary:hover {
             background-color: #0056b3;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+        }
+        .btn-danger:hover {
+            background-color: #bd2130;
         }
         .table-container {
             overflow-x: auto; /* Horizontal scrollbar for small screens */
@@ -59,6 +70,15 @@
         }
         p {
             margin-bottom: 20px;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .text-danger {
+            color: #dc3545 !important;
+        }
+        .text-success {
+            color: #28a745 !important;
         }
     </style>
 </head>
@@ -85,7 +105,7 @@
                     <a class="nav-link" href="profile.php" data-i18n="navbar.profile">Profil</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" data-i18n="navbar.logout">Odhlásiť</a>
+                    <a class="nav-link" href="../../logout.php" data-i18n="navbar.logout">Odhlásiť</a>
                 </li>
                 <li class="nav-item">
                     <button class="btn btn-outline-light ms-2" onclick="changeLanguage('sk')">SK</button>
@@ -116,7 +136,8 @@
 </div>
 
 <div class="text-center">
-    <button onclick="exportToCSV()" class="btn-primary" data-i18n="history.export">Exportovať do CSV</button>
+    <button onclick="exportToCSV()" class="btn-primary me-2" data-i18n="history.export">Exportovať do CSV</button>
+    <button onclick="clearHistory()" class="btn-danger" data-i18n="history.clear">Vymazať históriu</button>
 </div>
 
 <!-- Bootstrap JS -->
@@ -165,7 +186,11 @@
                         'history.table.country': 'Štát',
                         'history.table.platform': 'Platforma',
                         'history.export': 'Exportovať do CSV',
-                        'history.error': 'Chyba pri načítavaní dát.'
+                        'history.clear': 'Vymazať históriu',
+                        'history.error': 'Chyba pri načítavaní dát.',
+                        'history.confirm_clear': 'Naozaj chcete vymazať celú históriu? Táto akcia je nevratná.',
+                        'history.clear_success': 'História bola úspešne vymazaná.',
+                        'history.clear_error': 'Chyba pri vymazávaní histórie.'
                     }},
                 en: { translation: {
                         'navbar.brand': 'PDF Editor',
@@ -198,7 +223,11 @@
                         'history.table.country': 'Country',
                         'history.table.platform': 'Platform',
                         'history.export': 'Export to CSV',
-                        'history.error': 'Error fetching history data.'
+                        'history.clear': 'Clear History',
+                        'history.error': 'Error fetching history data.',
+                        'history.confirm_clear': 'Are you sure you want to clear all history? This action cannot be undone.',
+                        'history.clear_success': 'History was successfully cleared.',
+                        'history.clear_error': 'Error clearing history.'
                     }}
             }
         }, function(err, t) {
@@ -277,6 +306,47 @@
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+    }
+
+    function clearHistory() {
+        // Pošlite požiadavku na vymazanie histórie bez konfirmácie
+        fetch('../../clear_history.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ action: 'clear_history' })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Vymazať údaje z tabuľky
+            const tableBody = document.querySelector('#historyTable tbody');
+            tableBody.innerHTML = '';
+            
+            // Pridať informačnú správu do tabuľky namiesto alertu
+            const row = tableBody.insertRow();
+            const cell = row.insertCell();
+            cell.colSpan = 6;
+            cell.className = 'text-center text-success';
+            cell.textContent = i18next.t('history.clear_success');
+        })
+        .catch(error => {
+            console.error('Error clearing history:', error);
+            
+            // Zobrazenie chyby v tabuľke namiesto alertu
+            const tableBody = document.querySelector('#historyTable tbody');
+            tableBody.innerHTML = '';
+            const row = tableBody.insertRow();
+            const cell = row.insertCell();
+            cell.colSpan = 6;
+            cell.className = 'text-center text-danger';
+            cell.textContent = i18next.t('history.clear_error');
+        });
     }
 </script>
 </body>

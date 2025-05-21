@@ -1,5 +1,14 @@
 <?php
+session_start();
 require_once 'config.php'; // Include your database connection file
+
+// Kontrola, či je používateľ prihlásený a je administrátor
+if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] !== true || 
+    !isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
+    header('Content-Type: application/json');
+    echo json_encode(['error' => 'Unauthorized access']);
+    exit();
+}
 
 try {
     $sql = "SELECT
