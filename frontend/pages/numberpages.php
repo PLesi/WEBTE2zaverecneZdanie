@@ -1,9 +1,9 @@
 <?php
-/*session_start();
+session_start();
 if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
     header("Location: login_form.php");
 }
-*/?>
+?>
 <!DOCTYPE html>
 <html lang="sk">
 
@@ -282,12 +282,12 @@ if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
 
             const pageItem = document.createElement('div');
             pageItem.className = 'pageItem';
+            pageItem.style.cursor = 'pointer';
             pageItem.appendChild(canvas);
             pageItem.setAttribute('data-page-number', i);
 
             // Show modal on hover
-            pageItem.addEventListener('mouseenter', () => showModal(i));
-            pageItem.addEventListener('mouseleave', () => hideModal());
+            pageItem.addEventListener('click', () => showModal(i));
 
             pageList.appendChild(pageItem);
         }
