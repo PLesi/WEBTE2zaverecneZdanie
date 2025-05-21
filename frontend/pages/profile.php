@@ -108,7 +108,7 @@ $sessionApiKey = $_SESSION['api_key'] ?? 'Chýba v session'; // API kľúč aktu
     <title>Správa API kľúča</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="frontend/assets/css/styles.css" rel="stylesheet" />
+    <link href="../assets/css/styles.css" rel="stylesheet" />
 
     <style>
         h2, h3 {
@@ -148,20 +148,6 @@ $sessionApiKey = $_SESSION['api_key'] ?? 'Chýba v session'; // API kľúč aktu
             color: #adb5bd;
             font-size: 0.9em;
         }
-        .api-key-actions button {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-            transition: background-color 0.3s ease;
-            margin-top: 15px;
-        }
-        .api-key-actions button:hover {
-            background-color: #0056b3;
-        }
         .message {
             margin-top: 20px;
             padding: 10px;
@@ -182,41 +168,78 @@ $sessionApiKey = $_SESSION['api_key'] ?? 'Chýba v session'; // API kľúč aktu
     </style>
 </head>
 <body>
-    <?php include 'frontend/pages/navbar.php'; ?>
+    <!-- Navigation bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#" data-i18n="navbar.brand">PDF Editor</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../../index.php" data-i18n="navbar.home">Domov</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="history.php" data-i18n="navbar.history">História</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="manual.php" data-i18n="navbar.manual">Príručka</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" data-i18n="navbar.profile">Profil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-i18n="navbar.logout">Odhlásiť</a>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light ms-2" onclick="changeLanguage('sk')">SK</button>
+                        <button class="btn btn-outline-light ms-2" onclick="changeLanguage('en')">EN</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
     <div class="container d-flex justify-content-center align-items-center vh-100">
         <div class="col-md-5 hero-section">
-            <h2>Správa API kľúča</h2>
+            <h2 data-i18n="profile.title">Správa API kľúča</h2>
             <?php if (!empty($message)): ?>
                 <div class="message <?php echo strpos($message, 'úspešne') !== false ? 'success' : 'error'; ?>">
-                    <?php echo htmlspecialchars($message); ?>
+                    <span data-i18n="profile.message"><?php echo htmlspecialchars($message); ?></span>
                 </div>
             <?php endif; ?>
 
             <div class="user-info">
-                <h3>Vaše informácie</h3>
-                <p><strong>ID Používateľa (zo Session):</strong> <?php echo htmlspecialchars($userId ?? 'N/A'); ?></p>
-                <p><strong>Meno (z DB):</strong> <?php echo $username; ?></p>
-                <p><strong>Status (z DB):</strong> <span class="admin-status"><?php echo $isAdmin ? 'Administrátor' : 'Bežný užívateľ'; ?></span></p>
+                <h3 data-i18n="profile.user_info_title">Vaše informácie</h3>
+                <p><strong data-i18n="profile.user_id_label">ID Používateľa (zo Session):</strong> <?php echo htmlspecialchars($userId ?? 'N/A'); ?></p>
+                <p><strong data-i18n="profile.username_label">Meno (z DB):</strong> <?php echo $username; ?></p>
+                <p><strong data-i18n="profile.status_label">Status (z DB):</strong> <span class="admin-status" data-i18n="profile.status_admin"><?php echo $isAdmin ? 'Administrátor' : 'Bežný užívateľ'; ?></span></p>
             </div>
 
             <div class="api-key-section">
-                <h2>API kľúč</h2>
-                <label for="dbApiKeyDisplay">API kľúč uložený v databáze:</label>
+                <h2 data-i18n="profile.api_key_title">API kľúč</h2>
+                <label for="dbApiKeyDisplay" data-i18n="profile.api_key_db_label">API kľúč uložený v databáze:</label>
                 <div id="dbApiKeyDisplay" class="api-key-display">
                     <?php echo $currentDbApiKey; ?>
                 </div>
 
-                <label for="sessionApiKeyDisplay">API kľúč uložený v session:</label>
+                <label for="sessionApiKeyDisplay" data-i18n="profile.api_key_session_label">API kľúč uložený v session:</label>
                 <div id="sessionApiKeyDisplay" class="api-key-display">
                     <?php echo $sessionApiKey; ?>
                 </div>
 
                 <form action="" method="post" class="api-key-actions">
-                    <p>Kliknite pre vygenerovanie nového API kľúča. Starý bude neplatný.</p>
-                    <button type="submit" name="change_api_key">Vygenerovať a uložiť nový API kľúč</button>
+                    <p data-i18n="profile.api_key_warning">Kliknite pre vygenerovanie nového API kľúča. Starý bude neplatný.</p>
+                    <button class="btn btn-primary" type="submit" name="change_api_key" data-i18n="profile.generate_button">Vygenerovať a uložiť nový API kľúč</button>
                 </form>
             </div>
         </div>
     </div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- i18next -->
+    <script src="https://unpkg.com/i18next@23.15.1/dist/umd/i18next.min.js"></script>
+    <!-- custom JS -->
+    <script src="../assets/js/i18n.js"></script>
 </body>
 </html>

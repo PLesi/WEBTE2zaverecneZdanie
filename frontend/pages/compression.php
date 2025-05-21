@@ -1,40 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sk">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>PDF-compression</title>
+    <title data-i18n="operations.compress">Komprimovať PDF</title>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="../assets/css/styles.css" rel="stylesheet">
 </head>
 <body>
     <!-- Navigation bar -->
-    <?php include 'navbar.php'; ?>
+    <?php include 'navbarPDFoperations.php'; ?>
 
-    <div class="container">
-        <h1>PDF-compression</h1>
-        <form id="pdfForm" method="post" enctype="multipart/form-data">
-            <label for="pdfInput">Upload PDF:</label><br />
-            <input type="file" id="pdfInput" accept="application/pdf" required /><br />
-            <p id="povodna-velkost"></p>
+    <!-- Main content -->
+    <div class="hero-section">
+        <div class="container">
+            <h1 class="display-4" data-i18n="compress.title">Kompresia PDF</h1>
+            <p class="lead" data-i18n="compress.description">Nahrajte PDF súbor a nastavte úroveň kompresie pre optimalizáciu veľkosti.</p>
+            <form id="pdfForm" method="post" enctype="multipart/form-data">
+                <label for="pdfInput" data-i18n="compress.upload_label">Nahraj PDF:</label><br />
+                <input type="file" id="pdfInput" accept="application/pdf" required /><br />
+                <p id="povodna-velkost"></p>
 
-            <label for="compressionLevel">Compression Level (1-9):</label><br />
-            <input type="number" id="compressionLevel" min="1" max="9" value="5" required /><br />
+                <label for="compressionLevel" data-i18n="compress.level_label">Úroveň kompresie (1-9):</label><br>
+                <input type="number" id="compressionLevel" min="1" max="9" value="5" required><br>
 
-            <button type="submit">Compress</button>
-        </form>
+                <button type="submit" class="btn btn-primary" data-i18n="compress.submit">Komprimovať</button>
+            </form>
 
-        <div class="pdf-preview" id="previewContainer">
-            <h3>Compressed PDF Preview:</h3>
-            <p id="compressed-size"></p>
-            <div id="pdfPages" class="pdf-grid"></div>
-            <button id="downloadBtn" style="margin-top: 1rem;">Download</button>
+            <div class="pdf-preview" id="previewContainer">
+                <h3 data-i18n="compress.preview_title">Náhľad komprimovaného PDF:</h3>
+                <p id="compressed-size"></p>
+                <div id="pdfPages" class="pdf-grid"></div>
+                <button id="downloadBtn" class="btn btn-primary" style="margin-top: 1rem;" data-i18n="compress.download">Stiahnuť</button>
+            </div>
         </div>
     </div>
+
+    <footer data-i18n="footer.text">Webové technológie - PDF editor aplikácia</footer>
 
     <!-- PDF.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -44,9 +52,11 @@
     <script src="https://unpkg.com/i18next@23.15.1/dist/umd/i18next.min.js"></script>
     <!-- custom JS -->
     <script src="../assets/js/i18n.js"></script>
-    <script>
+    <script src="../assets/js/compression.js"></script>
+    <!--<script>
         const form = document.getElementById('pdfForm');
         const pdfInput = document.getElementById('pdfInput');
+        const dropArea = document.getElementById('dropArea');
         const compressionLevel = document.getElementById('compressionLevel');
         const previewContainer = document.getElementById('previewContainer');
         const pdfPagesContainer = document.getElementById('pdfPages');
@@ -56,21 +66,55 @@
 
         let compressedBlob = null;
 
-        pdfInput.addEventListener('change', () => {
-            const file = pdfInput.files[0];
-            if (file) {
+        // Funkcia na spracovanie nahraného súboru
+        const handleFile = (file) => {
+            if (file && file.type === 'application/pdf') {
                 const sizeKB = (file.size / 1024).toFixed(2);
-                originalSizeText.innerText = `Original Size: ${sizeKB} KB`;
+                originalSizeText.innerText = i18next.t('compress.original_size', { size: sizeKB });
+                // Priradiť súbor do pdfInput
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                pdfInput.files = dataTransfer.files;
             } else {
                 originalSizeText.innerText = '';
+                alert(i18next.t('compress.error_no_file'));
             }
+        };
+
+        // Drag-and-drop udalosti
+        dropArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropArea.classList.add('dragover');
         });
 
+        dropArea.addEventListener('dragleave', () => {
+            dropArea.classList.remove('dragover');
+        });
+
+        dropArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropArea.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            handleFile(file);
+        });
+
+        // Kliknutie na dropArea spustí výber súboru
+        dropArea.addEventListener('click', () => {
+            pdfInput.click();
+        });
+
+        // Manuálny výber súboru
+        pdfInput.addEventListener('change', () => {
+            const file = pdfInput.files[0];
+            handleFile(file);
+        });
+
+        // Odoslanie formulára
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const file = pdfInput.files[0];
-            if (!file) return alert('Please upload a PDF.');
+            if (!file) return alert(i18next.t('compress.error_no_file'));
 
             const level = compressionLevel.value;
 
@@ -84,25 +128,21 @@
                     body: formData
                 });
 
-                if (!response.ok) throw new Error('Compression failed');
+                if (!response.ok) throw new Error(i18next.t('compress.error_failed'));
 
                 compressedBlob = await response.blob();
                 const blobUrl = URL.createObjectURL(compressedBlob);
 
                 const sizeKB = (compressedBlob.size / 1024).toFixed(2);
-                compressedSizeText.innerText = `Compressed Size: ${sizeKB} KB`;
+                compressedSizeText.innerText = i18next.t('compress.compressed_size', { size: sizeKB });
                 previewContainer.style.display = 'flex';
 
-                // Clear previous pages
                 pdfPagesContainer.innerHTML = '';
 
-                // Load PDF with PDF.js and render pages
                 const pdf = await pdfjsLib.getDocument(blobUrl).promise;
                 for (let i = 1; i <= pdf.numPages; i++) {
                     const page = await pdf.getPage(i);
-                    const viewport = page.getViewport({
-                        scale: 0.6
-                    }); // smaller scale for thumbnails
+                    const viewport = page.getViewport({ scale: 0.6 });
 
                     const canvas = document.createElement('canvas');
                     const context = canvas.getContext('2d');
@@ -118,10 +158,11 @@
 
                 URL.revokeObjectURL(blobUrl);
             } catch (err) {
-                alert(err.message);
+                alert(i18next.t('compress.error_failed'));
             }
         });
 
+        // Stiahnutie súboru
         downloadBtn.addEventListener('click', () => {
             if (!compressedBlob) return;
             const a = document.createElement('a');
@@ -129,7 +170,7 @@
             a.download = 'compressed.pdf';
             a.click();
         });
-    </script>
+    </script>-->
 </body>
 
 </html>

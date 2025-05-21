@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sk">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Rotate PDF Pages</title>
+    <title data-i18n="operations.rotate">Rotovať stránky</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
@@ -13,20 +13,20 @@
 
 <body>
     <!-- Navigačný panel -->
-    <?php include 'navbar.php'; ?>
+    <?php include 'navbarPDFoperations.php'; ?>
 
-    <h2>Rotate All PDF Pages</h2>
+    <h2 data-i18n="rotate.title">Rotovať stránky</h2>
     <input type="file" id="pdfFile" accept="application/pdf" />
 
     <div class="controls">
-        <label for="rotationSelect">Rotation Angle:</label>
+        <label for="rotationSelect" data-i18n="rotate.label_rotation">Uhol rotácie:</label>
         <select id="rotationSelect">
-            <option value="90">90°</option>
-            <option value="180">180°</option>
-            <option value="270">270°</option>
+            <option value="90" data-i18n="rotate.option_90">90°</option>
+            <option value="180" data-i18n="rotate.option_180">180°</option>
+            <option value="270" data-i18n="rotate.option_270">270°</option>
         </select>
-        <button id="rotateBtn">Rotate</button>
-        <button id="downloadBtn">Download Rotated PDF</button>
+        <button id="rotateBtn" data-i18n="rotate.rotate_button">Rotovať</button>
+        <button id="downloadBtn" style="display:none" data-i18n="rotate.download_button">Stiahnuť rotované PDF</button>
     </div>
 
     <div id="pageList"></div>

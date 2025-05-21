@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sk">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>PDF Rearranger</title>
+    <title data-i18n="operations.rearrange">Preskupiť stránky</title>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -14,12 +14,12 @@
 
 <body>
     <!-- Navigation bar -->
-    <?php include 'navbar.php'; ?>
+    <?php include 'navbarPDFoperations.php'; ?>
 
-    <h2>Drag pages to rearrange order</h2>
-    <input type="file" id="pdfFile" accept="application/pdf" />
+    <h2 data-i18n="rearrange.instruction">Presuňte stránky pre zmenu poradia</h2>
+    <input type="file" id="pdfFile" accept="application/pdf" data-i18n-placeholder="rearrange.placeholder_upload" />
     <div id="pageList"></div>
-    <button id="downloadBtn" disabled>Download PDF</button>
+    <button id="downloadBtn" disabled data-i18n="rearrange.download_button">Stiahnuť PDF</button>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.8.162/pdf.min.js"></script>
     <!-- PDF.js -->
@@ -28,8 +28,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- i18next -->
     <script src="https://unpkg.com/i18next@23.15.1/dist/umd/i18next.min.js"></script>
-    <!-- custom JS -->
-    <script src="../assets/js/i18n.js"></script>
+    <!-- custom JS with defer -->
+    <script defer src="../assets/js/i18n.js"></script>
     <script>
         const pdfjsLib = window['pdfjs-dist/build/pdf'];
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.8.162/pdf.worker.min.js';
@@ -45,7 +45,7 @@
         pdfFileInput.addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if (!file || file.type !== 'application/pdf') {
-                alert('Please select a PDF file.');
+                alert(i18next.t('rearrange.error_invalid_file'));
                 return;
             }
 
@@ -99,14 +99,9 @@
         async function rearrangePdf(newOrder) {
             try {
                 const formData = new FormData();
-
-
                 formData.append('file', pdfFileInput.files[0]);
-
-
                 newOrder.forEach(pageNum => formData.append('order', pageNum));
-
-                formData.append('apiKey', 'asd'); // potom api kluce 
+                formData.append('apiKey', 'asd'); // potom api kluce
                 formData.append('platform', 'frontend');
 
                 const response = await fetch('http://node75.webte.fei.stuba.sk/api/pdf/rearrange', {
@@ -116,24 +111,22 @@
 
                 if (!response.ok) {
                     const text = await response.text();
-                    alert('Error rearranging PDF: ' + text);
+                    alert(i18next.t('rearrange.error_rearrange', { error: text }));
                     return;
                 }
 
                 const pdfBlob = await response.blob();
-
                 if (currentPdfBlobUrl) URL.revokeObjectURL(currentPdfBlobUrl);
                 currentPdfBlobUrl = URL.createObjectURL(pdfBlob);
 
             } catch (err) {
-                alert('Failed to rearrange PDF: ' + err.message);
+                alert(i18next.t('rearrange.error_failed', { error: err.message }));
             }
         }
 
-
         downloadBtn.addEventListener('click', () => {
             if (!currentPdfBlobUrl) {
-                alert('No rearranged PDF available yet.');
+                alert(i18next.t('rearrange.error_no_pdf'));
                 return;
             }
             const a = document.createElement('a');

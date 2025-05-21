@@ -15,13 +15,13 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Prihlásenie</title>
+    <title data-i18n="login.title">Prihlásenie</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="../assets/css/styles.css" rel="stylesheet" />
 </head>
 <body>
 
-<!-- Navbar začiatok -->
+<!-- Navigation bar -->
 <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="#" data-i18n="navbar.brand">PDF Editor</a>
@@ -32,10 +32,10 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" href="../pages/login_form.php" data-i18n="navbar.home">Prihlásenie</a>
+                    <a class="nav-link active" href="../pages/login_form.php" data-i18n="navbar.login">Prihlásenie</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../pages/registration_form.php" data-i18n="navbar.logout">Registrácia</a>
+                    <a class="nav-link" href="../pages/registration_form.php" data-i18n="navbar.register">Registrácia</a>
                 </li>
                 <li class="nav-item d-flex align-items-center">
                     <button class="btn btn-outline-light ms-2" onclick="changeLanguage('sk')">SK</button>
@@ -45,42 +45,49 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
         </div>
     </div>
 </nav>
-<!-- Navbar koniec -->
+
 
 <div class="container d-flex justify-content-center align-items-center vh-100">
     <div class="col-md-5 hero-section">
-        <h2 class="mb-4">Prihlásenie</h2>
+        <h2 data-i18n="login.heading">Prihlásenie</h2>
 
         <form id="loginForm" action="../../login.php" method="POST" novalidate>
             <div class="mb-3">
-                <label for="email" class="form-label">Email:</label>
+                <label for="email" class="form-label" data-i18n="login.label_email">Email:</label>
                 <input type="email" name="email" id="email" class="form-control" required />
-                <div id="emailError" class="text-danger mt-1" style="display: none;">Zadajte platný email.</div>
+                <div id="emailError" class="text-danger mt-1" style="display: none;" data-i18n="login.error_invalid_email">Zadajte platný email.</div>
             </div>
 
             <div class="mb-3">
-                <label for="password" class="form-label">Heslo:</label>
+                <label for="password" class="form-label" data-i18n="login.label_password">Heslo:</label>
                 <input type="password" name="password" id="password" class="form-control" required />
             </div>
 
             <?php if ($status): ?>
-                <div class="text-danger mb-3">
+                <div class="text-danger mb-3" data-i18n="[html]login.error_<?php echo $status; ?>">
                     <?php
                     if ($status === "empty") {
-                        echo "Vyplňte všetky polia.";
+                        echo i18next_t('login.error_empty');
                     } elseif ($status === "invalid") {
-                        echo "Nesprávny email alebo heslo.";
+                        echo i18next_t('login.error_invalid');
                     } elseif ($status === "dbError") {
-                        echo "Chyba databázy. Skúste znova neskôr.";
+                        echo i18next_t('login.error_db');
                     }
                     ?>
                 </div>
             <?php endif; ?>
 
-            <button type="submit" class="btn btn-primary w-100">Prihlásiť sa</button>
+            <button type="submit" class="btn btn-primary w-100" data-i18n="login.submit_button">Prihlásiť sa</button>
         </form>
     </div>
 </div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- i18next -->
+<script src="https://unpkg.com/i18next@23.15.1/dist/umd/i18next.min.js"></script>
+<!-- custom JS -->
+<script src="../assets/js/i18n.js"></script>
 
 <script>
     document.getElementById('loginForm').addEventListener('submit', function(e) {
