@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once 'config.php';
+
 function generateApiKey(): string
 {
     try {
@@ -12,15 +13,12 @@ function generateApiKey(): string
     }
 }
 
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
     $username = trim($_POST["username"]);
     $email = trim($_POST["email"]);
     $password = trim($_POST["password"]);
     $password2 = trim($_POST["password2"]);         // repeat password
     $hashed_password = password_hash($password, PASSWORD_ARGON2I);
-
 
     try {
         $stmt = $conn->prepare("SELECT email FROM users WHERE email = :email");
@@ -58,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION["login_status"] = "ok";
         $_SESSION["logged_in"] = true;
         $_SESSION["username"] = $username;
-        header("Location: ../../index.php");                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+        header("Location: index.php");
         exit();
 
     } catch (PDOException $e) {
