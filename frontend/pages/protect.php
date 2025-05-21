@@ -1,9 +1,9 @@
 <?php
-session_start();
+/*session_start();
 if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
     header("Location: login_form.php");
 }
-?>
+*/?>
 
 <!DOCTYPE html>
 <html lang="sk">
@@ -70,11 +70,10 @@ if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
                 <input type="file" id="pdfInput" accept="application/pdf" required>
                 <label for="pdfInput" class="custom-file-upload">
                     <i class="bi bi-upload"></i>
-                    <span data-i18n="protect.label_pdf">Nahrať PDF</span>
+                    <span data-i18n="compress.upload_label">Nahrať PDF</span>
                 </label>
                 <div id="fileInfo" class="ms-3">
                     <span id="fileNameDisplay" class="text-white"></span>
-                    <span id="originalSizeDisplay" class="text-white"></span>
                 </div>
                 <label for="password" data-i18n="protect.label_password">Zadať heslo:</label>
                 <input type="password" id="password" required>
