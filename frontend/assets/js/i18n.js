@@ -224,7 +224,14 @@
                 'register.label_confirm_password': 'Potvrď heslo:',
                 'register.error_invalid_email': 'Zadajte platný email.',
                 'register.error_password_mismatch': 'Heslá sa nezhodujú.',
-                'register.submit_button': 'Registrovať sa'
+                'register.submit_button': 'Registrovať sa',
+
+                "admin_access": {
+                    "title": "Admin prístup",
+                    "description": "Zadajte admin kľúč pre získanie admin privilégií:",
+                    "input_placeholder": "Zadajte admin kľúč",
+                    "button": "Overiť kľúč"
+                }
             }
         },
         en: {
@@ -451,7 +458,15 @@
                 'register.label_confirm_password': 'Confirm Password:',
                 'register.error_invalid_email': 'Please enter a valid email.',
                 'register.error_password_mismatch': 'Passwords do not match.',
-                'register.submit_button': 'Register'
+                'register.submit_button': 'Register',
+
+                "admin_access": {
+                    "title": "Admin Access",
+                    "description": "Enter the admin key to gain administrative privileges:",
+                    "input_placeholder": "Enter admin key",
+                    "button": "Verify Key"
+                }
+
             }
         }
     };

@@ -1,9 +1,9 @@
 <?php
-session_start();
+/*session_start();
 if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
     header("Location: login_form.php");
 }
-?>
+*/?>
 
 <!DOCTYPE html>
 <html lang="sk">
@@ -17,84 +17,8 @@ if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="../assets/css/styles.css" rel="stylesheet">
+    <link href="../assets/css/operations.css" rel="stylesheet">
 
-    <style>
-        .btn-primary {
-            background-color: #837ee3;
-            border-color: #948de7;
-            color: #000000;
-        }
-        .btn-primary:hover {
-            background-color: #b4acee;
-            border-color: #b4acee;
-            color: #313038;
-        }
-        #pdfFile {
-            display: none;
-        }
-        #fileInfo {
-            margin-top: 10px;
-            color: #c3bcf2;
-        }
-        #fileNameDisplay {
-            font-weight: bold;
-        }
-        #originalSizeDisplay {
-            margin-left: 10px;
-        }
-        .custom-file-upload {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #313038;
-            border: 1px solid #c3bcf2;
-            color: #c3bcf2;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-        .custom-file-upload:hover {
-            background-color: #47464d;
-        }
-        .custom-file-upload i {
-            margin-right: 8px;
-        }
-        #errorMessage {
-            display: none;
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 10px 20px;
-            border-radius: 5px;
-            margin-top: 20px;
-            position: relative;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        #errorMessage.show {
-            display: block;
-        }
-        #errorMessage .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: none;
-            border: none;
-            font-size: 18px;
-            cursor: pointer;
-            color: #721c24;
-        }
-        #pageList {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-        }
-        .pageItem {
-            margin: 10px;
-            cursor: move;
-        }
-    </style>
 </head>
 
 <body>
@@ -103,15 +27,15 @@ if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
 
     <div class="hero-section">
         <div class="container">
-            <h2 data-i18n="rearrange.instruction">Presuňte stránky pre zmenu poradia</h2>
+            <h1 class="display-4" data-i18n="rearrange.instruction">Presuňte stránky pre zmenu poradia</h1>
             <div id="errorMessage">
                 <span id="errorText"></span>
                 <button type="button" class="close-btn" onclick="hideErrorMessage()">×</button>
             </div>
-            <input type="file" id="pdfFile" accept="application/pdf">
-            <label for="pdfFile" class="custom-file-upload">
+            <input type="file" id="pdfInput" accept="application/pdf" required />
+            <label for="pdfInput" class="custom-file-upload">
                 <i class="bi bi-upload"></i>
-                <span data-i18n="rearrange.upload_label">Nahraj PDF</span>
+                <span data-i18n="compress.upload_label">Nahraj PDF</span>
             </label>
             <div id="fileInfo" class="ms-3">
                 <span id="fileNameDisplay" class="text-white"></span>
@@ -142,7 +66,7 @@ if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
         let currentPdfBlobUrl = null;
 
         const pageList = document.getElementById('pageList');
-        const pdfFileInput = document.getElementById('pdfFile');
+        const pdfFileInput = document.getElementById('pdfInput');
         const downloadBtn = document.getElementById('downloadBtn');
         const fileNameDisplay = document.getElementById('fileNameDisplay');
         const originalSizeDisplay = document.getElementById('originalSizeDisplay');
