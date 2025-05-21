@@ -1,10 +1,9 @@
-
-<?php 
+<?php /*
     session_start();
     if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
         header("Location: login_form.php");
-    } 
-?>
+    }
+*/?>
 <!DOCTYPE html>
 <html lang="sk">
 
@@ -14,157 +13,211 @@
     <title data-i18n="operations.jpg_to_pdf">JPG do PDF</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="../assets/css/styles.css" rel="stylesheet">
+    <link href="../assets/css/operations.css" rel="stylesheet">
+    <style>
+        #imagePreview {
+            display: none;
+            max-width: 100%;
+            height: auto;
+            margin: 20px auto;
+        }
+
+        #pdfPreview {
+            display: none;
+            width: 100%;
+            height: 400px;
+            margin: 20px auto;
+        }
+    </style>
 </head>
 
 <body>
-    <!-- Navigačný panel -->
-    <?php include 'navbarPDFoperations.php'; ?>
+<!-- Navigačný panel -->
+<?php include 'navbarPDFoperations.php'; ?>
+<div class="hero-section">
+    <div class="container mt-5">
+        <h1 class="display-4" data-i18n="operations.jpg_to_pdf">PDF do JPG</h1>
+        <p class="lead" data-i18n="jpg_to_pdf.title">Konvertuj JPG to PDF s náhľadom</p>
 
-    <div class="content-section">
-        <h2 data-i18n="jpg_to_pdf.title">Convert JPG to PDF with Preview</h2>
+        <!-- Chybové hlásenie -->
+        <div id="errorMessage">
+            <span id="errorText"></span>
+            <button type="button" class="close-btn" onclick="hideErrorMessage()">×</button>
+        </div>
 
-        <label for="jpgFile" data-i18n="jpg_to_pdf.label_select">Select JPG file:</label>
-        <input type="file" id="jpgFile" accept="image/jpeg" />
+        <div class="text-center mb-3">
+            <!-- Skrytý input -->
+            <input type="file" id="pdfInput" accept="image/jpeg" />
 
-        <img id="imagePreview" alt="Image preview" style="display:none" />
+            <!-- Vlastné tlačidlo s ikonou -->
+            <label for="pdfInput" class="custom-file-upload">
+                <i class="bi bi-upload"></i>
+                <span data-i18n="jpg_to_pdf.upload_label">Nahraj JPG</span>
+            </label>
 
-        <button id="convertBtn" disabled data-i18n="jpg_to_pdf.convert_button">Convert to PDF</button>
-        <div id="message"></div>
+            <!-- Zobrazenie názvu súboru -->
+            <div id="fileInfo" class="mt-2">
+                <span id="fileNameDisplay"></span>
+            </div>
+        </div>
 
-        <embed id="pdfPreview" type="application/pdf" style="display:none" />
-        <button id="downloadBtn" style="display:none" data-i18n="jpg_to_pdf.download_button">Download PDF</button>
+        <img id="imagePreview" alt="Image preview" />
+
+        <div class="text-center mb-3">
+            <button id="convertBtn" class="btn btn-primary" disabled data-i18n="jpg_to_pdf.convert_button">Convert to PDF</button>
+        </div>
+
+        <embed id="pdfPreview" type="application/pdf" />
+        <div class="text-center">
+            <button id="downloadBtn" class="btn btn-success" style="display:none" data-i18n="jpg_to_pdf.download_button">Download PDF</button>
+        </div>
     </div>
+</div>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- PDF.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<!-- i18next -->
+<script src="https://unpkg.com/i18next@23.15.1/dist/umd/i18next.min.js"></script>
+<!-- custom JS -->
+<script src="../assets/js/i18n.js"></script>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- PDF.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    <!-- i18next -->
-    <script src="https://unpkg.com/i18next@23.15.1/dist/umd/i18next.min.js"></script>
-    <!-- custom JS -->
-    <script src="../assets/js/i18n.js"></script>
+<script>
+    const jpgFileInput = document.getElementById('jpgFile');
+    const imagePreview = document.getElementById('imagePreview');
+    const convertBtn = document.getElementById('convertBtn');
+    const fileNameDisplay = document.getElementById('fileNameDisplay');
+    let pdfPreview = document.getElementById('pdfPreview');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const errorMessage = document.getElementById('errorMessage');
+    const errorText = document.getElementById('errorText');
 
-    <script>
-        const jpgFileInput = document.getElementById('jpgFile');
-        const imagePreview = document.getElementById('imagePreview');
-        const convertBtn = document.getElementById('convertBtn');
-        const message = document.getElementById('message');
-        let pdfPreview = document.getElementById('pdfPreview');
-        const downloadBtn = document.getElementById('downloadBtn');
+    let pdfBlobUrl = null;
 
-        let pdfBlobUrl = null;
+    // Funkcia na zobrazenie chybového hlásenia
+    function showErrorMessage(message) {
+        errorText.textContent = message;
+        errorMessage.classList.add('show');
+        // Automaticky skryť po 5 sekundách
+        setTimeout(hideErrorMessage, 5000);
+    }
 
-        jpgFileInput.addEventListener('change', () => {
-            message.textContent = '';
-            pdfPreview.style.display = 'none';
-            downloadBtn.style.display = 'none';
-            convertBtn.disabled = true;
-            pdfBlobUrl && URL.revokeObjectURL(pdfBlobUrl);
-            pdfBlobUrl = null;
+    // Funkcia na skrytie chybového hlásenia
+    function hideErrorMessage() {
+        errorMessage.classList.remove('show');
+        errorText.textContent = '';
+    }
 
-            let file = jpgFileInput.files[0];
-            if (!file) {
-                imagePreview.style.display = 'none';
-                return;
-            }
-            if (file.type !== 'image/jpeg') {
-                message.textContent = 'File must be a JPG image.';
-                imagePreview.style.display = 'none';
-                return;
-            }
+    jpgFileInput.addEventListener('change', () => {
+        pdfPreview.style.display = 'none';
+        downloadBtn.style.display = 'none';
+        convertBtn.disabled = true;
+        pdfBlobUrl && URL.revokeObjectURL(pdfBlobUrl);
+        pdfBlobUrl = null;
 
-            // Show image preview
-            const reader = new FileReader();
-            reader.onload = e => {
-                imagePreview.src = e.target.result;
-                imagePreview.style.display = 'block';
-            };
-            reader.readAsDataURL(file);
+        const file = jpgFileInput.files[0];
+        if (!file) {
+            fileNameDisplay.textContent = '';
+            imagePreview.style.display = 'none';
+            return;
+        }
+        if (file.type !== 'image/jpeg') {
+            fileNameDisplay.textContent = '';
+            imagePreview.style.display = 'none';
+            showErrorMessage(i18next.t('jpg_to_pdf.error_invalid_file'));
+            return;
+        }
+
+        fileNameDisplay.textContent = file.name;
+
+        // Show image preview
+        const reader = new FileReader();
+        reader.onload = e => {
+            imagePreview.src = e.target.result;
+            imagePreview.style.display = 'block';
             convertBtn.disabled = false;
-        });
+        };
+        reader.onerror = () => {
+            showErrorMessage(i18next.t('jpg_to_pdf.error_read_file'));
+        };
+        reader.readAsDataURL(file);
+    });
 
-        convertBtn.addEventListener('click', async () => {
-            message.textContent = '';
-            const file = jpgFileInput.files[0];
-            if (!file) {
-                message.textContent = 'Please select a JPG file.';
+    convertBtn.addEventListener('click', async () => {
+        const file = jpgFileInput.files[0];
+        if (!file) {
+            showErrorMessage(i18next.t('jpg_to_pdf.error_no_file'));
+            return;
+        }
+
+        convertBtn.disabled = true;
+        convertBtn.textContent = i18next.t('jpg_to_pdf.converting');
+        downloadBtn.style.display = 'none';
+        pdfPreview.style.display = 'none';
+        pdfBlobUrl && URL.revokeObjectURL(pdfBlobUrl);
+        pdfBlobUrl = null;
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('apiKey', 'asd'); // Replace with real key if needed
+        formData.append('platform', 'frontend');
+
+        try {
+            const response = await fetch('http://node75.webte.fei.stuba.sk/api/pdf/jpgToPdf', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                showErrorMessage(i18next.t('jpg_to_pdf.error_convert', { error: errorText }));
                 return;
             }
 
-            convertBtn.disabled = true;
-            convertBtn.textContent = 'Converting...';
-            downloadBtn.style.display = 'none';
-            pdfPreview.style.display = 'none';
-            pdfBlobUrl && URL.revokeObjectURL(pdfBlobUrl);
-            pdfBlobUrl = null;
+            const blob = await response.blob();
+            pdfBlobUrl = URL.createObjectURL(blob);
 
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('apiKey', 'asd'); // Replace with real key if needed
-            formData.append('platform', 'frontend');
+            // Show PDF preview
+            pdfPreview.src = pdfBlobUrl;
+            pdfPreview.style.display = 'block';
+            pdfPreview.alt = 'Converted PDF Preview (embedded)';
 
-            try {
-                const response = await fetch('http://node75.webte.fei.stuba.sk/api/pdf/jpgToPdf', {
-                    method: 'POST',
-                    body: formData
-                });
+            const embed = document.createElement('embed');
+            embed.src = pdfBlobUrl;
+            embed.type = 'application/pdf';
+            embed.style.width = '100%';
+            embed.style.height = '400px';
+            pdfPreview.replaceWith(embed);
+            pdfPreview = embed;
 
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    message.textContent = 'Error: ' + errorText;
-                    convertBtn.disabled = false;
-                    convertBtn.textContent = 'Convert to PDF';
-                    return;
-                }
+            downloadBtn.style.display = 'block';
+            showErrorMessage(i18next.t('jpg_to_pdf.success_message'));
 
-                const blob = await response.blob();
-                pdfBlobUrl = URL.createObjectURL(blob);
+        } catch (err) {
+            showErrorMessage(i18next.t('jpg_to_pdf.error_failed', { error: err.message }));
+        } finally {
+            convertBtn.disabled = false;
+            convertBtn.textContent = i18next.t('jpg_to_pdf.convert_button');
+        }
+    });
 
-                // Show PDF preview: simplest way is embed as an object or img of first page
-                // Since rendering PDF's first page as image is complex in pure JS without libs,
-                // we will embed PDF in <embed> or <object> tag as preview instead.
-
-                pdfPreview.src = pdfBlobUrl;
-                pdfPreview.style.display = 'block';
-                pdfPreview.alt = 'Converted PDF Preview (embedded)';
-                // For better preview, we can embed PDF using <embed> or <object> dynamically
-                // but <img> won't show PDF. Let's switch to <embed> for preview:
-                const embed = document.createElement('embed');
-                embed.src = pdfBlobUrl;
-                embed.type = 'application/pdf';
-                embed.style.width = '100%';
-                embed.style.height = '400px';
-                pdfPreview.replaceWith(embed);
-                pdfPreview = embed;
-
-                downloadBtn.style.display = 'block';
-                message.style.color = 'green';
-                message.textContent = 'Conversion successful!';
-
-            } catch (err) {
-                message.textContent = 'Error: ' + err.message;
-            } finally {
-                convertBtn.disabled = false;
-                convertBtn.textContent = 'Convert to PDF';
-            }
-        });
-
-        downloadBtn.addEventListener('click', () => {
-            if (!pdfBlobUrl) {
-                alert('No PDF to download.');
-                return;
-            }
-            const a = document.createElement('a');
-            a.href = pdfBlobUrl;
-            a.download = 'converted.pdf';
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-        });
-    </script>
-
+    downloadBtn.addEventListener('click', () => {
+        if (!pdfBlobUrl) {
+            showErrorMessage(i18next.t('jpg_to_pdf.error_no_pdf'));
+            return;
+        }
+        const a = document.createElement('a');
+        a.href = pdfBlobUrl;
+        a.download = 'converted.pdf';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+    });
+</script>
 </body>
 
 </html>
