@@ -1,9 +1,9 @@
-<?php 
+<?php /*
     session_start();
     if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
         header("Location: login_form.php");
     } 
-?>
+*/?>
 
 <!DOCTYPE html>
 <html lang="sk">
@@ -19,81 +19,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="../assets/css/styles.css" rel="stylesheet">
-
-    <style>
-        .pdf-preview {
-            display: none;
-            flex-direction: column;
-        }
-        /* Skrytie pôvodného inputu */
-        #pdfInput {
-            display: none;
-        }
-
-        #fileInfo {
-            margin-top: 10px;
-            color: #c3bcf2;
-        }
-
-        #fileNameDisplay {
-            font-weight: bold;
-        }
-
-        #originalSizeDisplay {
-            margin-left: 10px;
-        }
-
-        /* Štýlovanie vlastného tlačidla */
-        .custom-file-upload {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #313038;
-            border-color: #c3bcf2;
-            color: #c3bcf2;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-
-        .custom-file-upload:hover {
-            background-color: #47464d; /* Tmavší odtieň pre hover */
-        }
-
-        /* Štýlovanie ikony */
-        .custom-file-upload i {
-            margin-right: 8px;
-        }
-
-        /* Štýlovanie chybového hlásenia */
-        #errorMessage {
-            display: none;
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 10px 20px;
-            border-radius: 5px;
-            margin-top: 20px;
-            position: relative;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        #errorMessage.show {
-            display: block;
-        }
-
-        #errorMessage .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: none;
-            border: none;
-            font-size: 18px;
-            cursor: pointer;
-            color: #721c24;
-        }
-    </style>
+    <link href="../assets/css/operations.css" rel="stylesheet">
 </head>
 <body>
 <!-- Navigation bar -->
