@@ -1,9 +1,9 @@
-<?php 
-    session_start();
-    if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
-        header("Location: login_form.php");
-    } 
-?>
+<?php
+/*session_start();
+if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
+    header("Location: login_form.php");
+}
+*/?>
 <!DOCTYPE html>
 <html lang="sk">
 
@@ -15,17 +15,64 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="../assets/css/styles.css" rel="stylesheet">
+    <link href="../assets/css/operations.css" rel="stylesheet">
+    <style>
+        /* Skrytie pôvodného inputu */
+        #pdfInput {
+            display: none;
+        }
+
+        #fileInfo {
+            margin-top: 10px;
+            color: #ffffff;
+        }
+
+        #fileNameDisplay {
+            font-weight: bold;
+        }
+
+    </style>
 </head>
 
 <body>
 <!-- Navigation bar -->
 <?php include 'navbarPDFoperations.php'; ?>
+<div class="hero-section">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <h2 class="text-center mb-4" data-i18n="delete_page.instruction">Kliknite na stránku pre jej odstránenie</h2>
 
-<h2 data-i18n="delete_page.instruction">Kliknite na stránku pre jej odstránenie</h2>
-<input type="file" id="pdfFile" accept="application/pdf" data-i18n-placeholder="delete_page.placeholder_upload" />
-<div id="pageList"></div>
-<button id="downloadBtn" disabled data-i18n="delete_page.download_button">Stiahnuť PDF</button>
+                <!-- Chybové hlásenie -->
+                <div id="errorMessage">
+                    <span id="errorText"></span>
+                    <button type="button" class="close-btn" onclick="hideErrorMessage()">×</button>
+                </div>
 
+                <div class="text-center mb-3">
+                    <!-- Skrytý input -->
+                    <input type="file" id="pdfInput" accept="application/pdf" required />
+
+                    <!-- Vlastné tlačidlo s ikonou -->
+                    <label for="pdfInput" class="custom-file-upload">
+                        <i class="bi bi-upload"></i>
+                        <span data-i18n="compress.upload_label">Nahraj PDF</span>
+                    </label>
+
+                    <!-- Zobrazenie názvu súboru -->
+                    <div id="fileInfo" class="mt-2">
+                        <span id="fileNameDisplay"></span>
+                    </div>
+                </div>
+
+                <div id="pageList" class="d-flex flex-wrap justify-content-center"></div>
+                <div class="text-center mt-3">
+                    <button id="downloadBtn" class="btn btn-primary" disabled data-i18n="delete_page.download_button">Stiahnuť PDF</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- PDF.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.8.162/pdf.min.js"></script>
 <!-- Bootstrap JS -->
@@ -42,24 +89,53 @@
     let currentPdfBlobUrl = null;
     let fileObject = null;
 
-    const pdfFileInput = document.getElementById('pdfFile');
+    const pdfFileInput = document.getElementById('pdfInput');
     const pageList = document.getElementById('pageList');
     const downloadBtn = document.getElementById('downloadBtn');
+    const fileNameDisplay = document.getElementById('fileNameDisplay');
+    const errorMessage = document.getElementById('errorMessage');
+    const errorText = document.getElementById('errorText');
 
-    pdfFileInput.addEventListener('change', async (e) => {
-        fileObject = e.target.files[0];
-        if (!fileObject || fileObject.type !== 'application/pdf') {
-            alert(i18next.t('delete_page.error_invalid_file'));
-            return;
+    // Funkcia na zobrazenie chybového hlásenia
+    function showErrorMessage(message) {
+        errorText.textContent = message;
+        errorMessage.classList.add('show');
+        // Automaticky skryť po 5 sekundách
+        setTimeout(hideErrorMessage, 5000);
+    }
+
+    // Funkcia na skrytie chybového hlásenia
+    function hideErrorMessage() {
+        errorMessage.classList.remove('show');
+        errorText.textContent = '';
+    }
+
+    // Funkcia na spracovanie nahraného súboru
+    const handleFile = (file) => {
+        if (file && file.type === 'application/pdf') {
+            fileNameDisplay.textContent = file.name;
+            fileObject = file;
+            originalPdfBytes = null; // Reset pre nový súbor
+        } else {
+            fileNameDisplay.textContent = '';
+            fileObject = null;
+            showErrorMessage(i18next.t('delete_page.error_invalid_file'));
         }
+    };
 
-        originalPdfBytes = await fileObject.arrayBuffer();
-        await renderPdf(originalPdfBytes);
+    // Manuálny výber súboru
+    pdfFileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        handleFile(file);
+        if (fileObject) {
+            renderPdf(fileObject);
+        }
     });
 
-    async function renderPdf(pdfBytes) {
+    async function renderPdf(file) {
+        originalPdfBytes = await file.arrayBuffer();
         const pdf = await pdfjsLib.getDocument({
-            data: pdfBytes
+            data: originalPdfBytes
         }).promise;
         pageList.innerHTML = '';
 
@@ -114,7 +190,7 @@
 
             if (!response.ok) {
                 const errText = await response.text();
-                alert(i18next.t('delete_page.error_remove', { error: errText }));
+                showErrorMessage(i18next.t('delete_page.error_remove', { error: errText }));
                 return;
             }
 
@@ -126,16 +202,16 @@
                 type: "application/pdf"
             });
             const newBytes = await newPdfBlob.arrayBuffer();
-            await renderPdf(newBytes);
+            await renderPdf(fileObject);
 
         } catch (err) {
-            alert(i18next.t('delete_page.error_failed', { error: err.message }));
+            showErrorMessage(i18next.t('delete_page.error_failed', { error: err.message }));
         }
     }
 
     downloadBtn.addEventListener('click', () => {
         if (!currentPdfBlobUrl) {
-            alert(i18next.t('delete_page.error_no_updated_pdf'));
+            showErrorMessage(i18next.t('delete_page.error_no_updated_pdf'));
             return;
         }
         const a = document.createElement('a');
