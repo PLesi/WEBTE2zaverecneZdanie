@@ -1,8 +1,8 @@
-<?php 
-    session_start();
-    if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
-        header("Location: login_form.php");
-    } 
+<?php
+session_start();
+if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
+    header("Location: login_form.php");
+}
 ?>
 
 <!DOCTYPE html>
@@ -13,20 +13,116 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title data-i18n="operations.rearrange">Preskupiť stránky</title>
 
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="../assets/css/styles.css" rel="stylesheet">
+
+    <style>
+        .btn-primary {
+            background-color: #837ee3;
+            border-color: #948de7;
+            color: #000000;
+        }
+        .btn-primary:hover {
+            background-color: #b4acee;
+            border-color: #b4acee;
+            color: #313038;
+        }
+        #pdfFile {
+            display: none;
+        }
+        #fileInfo {
+            margin-top: 10px;
+            color: #c3bcf2;
+        }
+        #fileNameDisplay {
+            font-weight: bold;
+        }
+        #originalSizeDisplay {
+            margin-left: 10px;
+        }
+        .custom-file-upload {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #313038;
+            border: 1px solid #c3bcf2;
+            color: #c3bcf2;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .custom-file-upload:hover {
+            background-color: #47464d;
+        }
+        .custom-file-upload i {
+            margin-right: 8px;
+        }
+        #errorMessage {
+            display: none;
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+            position: relative;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        #errorMessage.show {
+            display: block;
+        }
+        #errorMessage .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            color: #721c24;
+        }
+        #pageList {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+        .pageItem {
+            margin: 10px;
+            cursor: move;
+        }
+    </style>
 </head>
 
 <body>
     <!-- Navigation bar -->
     <?php include 'navbarPDFoperations.php'; ?>
 
-    <h2 data-i18n="rearrange.instruction">Presuňte stránky pre zmenu poradia</h2>
-    <input type="file" id="pdfFile" accept="application/pdf" data-i18n-placeholder="rearrange.placeholder_upload" />
-    <div id="pageList"></div>
-    <button id="downloadBtn" disabled data-i18n="rearrange.download_button">Stiahnuť PDF</button>
+    <div class="hero-section">
+        <div class="container">
+            <h2 data-i18n="rearrange.instruction">Presuňte stránky pre zmenu poradia</h2>
+            <div id="errorMessage">
+                <span id="errorText"></span>
+                <button type="button" class="close-btn" onclick="hideErrorMessage()">×</button>
+            </div>
+            <input type="file" id="pdfFile" accept="application/pdf">
+            <label for="pdfFile" class="custom-file-upload">
+                <i class="bi bi-upload"></i>
+                <span data-i18n="rearrange.upload_label">Nahraj PDF</span>
+            </label>
+            <div id="fileInfo" class="ms-3">
+                <span id="fileNameDisplay" class="text-white"></span>
+                <span id="originalSizeDisplay" class="text-white"></span>
+            </div>
+            <div id="pageList"></div>
+            <div class="d-flex justify-content-center">
+                <button id="downloadBtn" class="btn btn-primary mt-3" disabled data-i18n="rearrange.download_button">Stiahnuť PDF</button>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.8.162/pdf.min.js"></script>
     <!-- PDF.js -->
@@ -48,6 +144,21 @@
         const pageList = document.getElementById('pageList');
         const pdfFileInput = document.getElementById('pdfFile');
         const downloadBtn = document.getElementById('downloadBtn');
+        const fileNameDisplay = document.getElementById('fileNameDisplay');
+        const originalSizeDisplay = document.getElementById('originalSizeDisplay');
+        const errorMessage = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+
+        function showErrorMessage(message) {
+            if (errorText) errorText.textContent = message;
+            if (errorMessage) errorMessage.classList.add('show');
+            setTimeout(hideErrorMessage, 5000);
+        }
+
+        function hideErrorMessage() {
+            if (errorMessage) errorMessage.classList.remove('show');
+            if (errorText) errorText.textContent = '';
+        }
 
         pdfFileInput.addEventListener('change', async (e) => {
             const file = e.target.files[0];
@@ -118,7 +229,7 @@
 
                 if (!response.ok) {
                     const text = await response.text();
-                    alert(i18next.t('rearrange.error_rearrange', { error: text }));
+                    showErrorMessage(i18next.t('rearrange.error_rearrange', { error: text }) || 'Chyba pri preskupení PDF: ' + text);
                     return;
                 }
 
@@ -127,13 +238,13 @@
                 currentPdfBlobUrl = URL.createObjectURL(pdfBlob);
 
             } catch (err) {
-                alert(i18next.t('rearrange.error_failed', { error: err.message }));
+                showErrorMessage(i18next.t('rearrange.error_failed', { error: err.message }) || 'Preskupenie zlyhalo: ' + err.message);
             }
         }
 
         downloadBtn.addEventListener('click', () => {
             if (!currentPdfBlobUrl) {
-                alert(i18next.t('rearrange.error_no_pdf'));
+                showErrorMessage(i18next.t('rearrange.error_no_pdf') || 'Nie je k dispozícii PDF na stiahnutie');
                 return;
             }
             const a = document.createElement('a');
