@@ -16,7 +16,14 @@ try {
     $stmt->bindParam("email", $email);
     $stmt->execute();
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
-    $stmt = $connm->prepare("SELECT api_key FROM api_keys WHERE user_id = :user_id");
+    
+    if (!$user) {
+        $_SESSION['login_status'] = "invalid";
+        header("Location: frontend/pages/login_form.php");
+        exit();
+    }
+    
+    $stmt = $conn->prepare("SELECT api_key FROM api_keys WHERE user_id = :user_id");
     $stmt->bindParam("user_id", $user['id']);
     $stmt->execute();
     $api_key = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -28,8 +35,10 @@ try {
 
     if ($user && password_verify($password, $user['password'])) {
         $_SESSION['user_id'] = $user['id'];
+        $_SESSION['username'] = $user['username'];
         $_SESSION['login_status'] = "ok";
         $_SESSION['logged_in'] = true;
+        $_SESSION['is_admin'] = (bool)$user['is_admin']; // Set admin status in session
 
         header("Location: index.php");
         exit();
