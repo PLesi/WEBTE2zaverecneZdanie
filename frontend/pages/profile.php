@@ -334,20 +334,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit_admin_key"]) &&
                     <button class="btn btn-primary" type="submit" name="change_api_key" data-i18n="profile.generate_button">Vygenerovať a uložiť nový API kľúč</button>
                 </form>
             </div>
-            
+
             <?php if (!$isAdmin): ?>
-            <div class="api-key-section">
-                <h2>Admin prístup</h2>
-                <p style="color: #f8f9fa; margin-bottom: 15px;">Zadajte admin kľúč pre získanie admin privilégií:</p>
-                
-                <form action="" method="post" class="admin-key-form">
-                    <div class="mb-3">
-                        <input type="password" class="form-control" id="adminKey" name="admin_key" placeholder="Zadajte admin kľúč" style="background-color: #495057; color: #f8f9fa; border-color: #6c757d;">
-                    </div>
-                    <button type="submit" name="submit_admin_key" class="btn btn-primary">Overiť kľúč</button>
-                </form>
-            </div>
+                <div class="api-key-section">
+                    <h2 data-i18n="admin_access.title">Admin prístup</h2>
+                    <p data-i18n="admin_access.description" style="color: #f8f9fa; margin-bottom: 15px;">
+                        Zadajte admin kľúč pre získanie admin privilégií:
+                    </p>
+
+                    <form action="" method="post" class="admin-key-form">
+                        <div class="mb-3">
+                            <input type="password"
+                                   class="form-control"
+                                   id="adminKey"
+                                   name="admin_key"
+                                   placeholder="Zadajte admin kľúč"
+                                   style="background-color: #495057; color: #f8f9fa; border-color: #6c757d;"
+                                   data-i18n-placeholder="admin_access.input_placeholder">
+                        </div>
+                        <button type="submit" name="submit_admin_key" class="btn btn-primary" data-i18n="admin_access.button">
+                            Overiť kľúč
+                        </button>
+                    </form>
+                </div>
             <?php endif; ?>
+
         </div>
     </div>
     <!-- Bootstrap JS -->
