@@ -1,4 +1,4 @@
-<?php 
+<?php
     session_start();
     if (!isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] != true) {
         header("Location: login_form.php");
@@ -13,39 +13,135 @@
     <title data-i18n="edit.title">Editovať PDF</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="../assets/css/styles.css" rel="stylesheet">
+    <link href="../assets/css/operations.css" rel="stylesheet">
+    <style>
+        /* Štýlovanie ovládacích prvkov */
+        .edit-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .edit-controls input[type="range"],
+        .edit-controls input[type="color"],
+        .edit-controls input[type="number"] {
+            max-width: 100px;
+        }
+
+        .edit-controls input[type="number"] {
+            width: 60px;
+        }
+
+        .thumbnail-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .thumbnail-grid canvas {
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+
+        #pdf-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        #pdf-canvas,
+        #draw-canvas {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    </style>
 </head>
 
 <body>
 <!-- Navigačný panel -->
 <?php include 'navbarPDFoperations.php'; ?>
+<div class="hero-section">
+    <div class="container mt-5">
+        <h1 class="display-4" data-i18n="edit.title">PDF Editing</h1>
 
-<h1 data-i18n="edit.title">PDF Editing</h1>
-<input type="file" id="pdf-upload" accept="application/pdf" data-i18n-placeholder="edit.placeholder_upload" />
-<input id="pen-width" type="range" min="3" value="5" step="2" max="25" data-i18n-title="edit.title_pen_width">
-<input type="color" value="#000000" id="pen-color" data-i18n-title="edit.title_pen_color" />
-<input type="text" value="1" id="page-number" data-i18n-placeholder="edit.placeholder_page" />
-<button onclick="prevPage()" data-i18n="edit.prev_button">&lt;</button>
-<button onclick="nextPage()" data-i18n="edit.next_button">&gt;</button>
-<button onclick="handleInput()" data-i18n="edit.text_button">Text</button>
-<input id="text-size" type="number" min="3" value="16" step="2" max="72" data-i18n-title="edit.title_text_size">
-<input id="text-color" type="color" value="#000000" data-i18n-title="edit.title_text_color" />
-<button onclick="toggleEraser()" data-i18n="edit.eraser_button">Eraser</button>
-<input id="eraser-width" type="range" min="3" value="5" step="2" max="25" data-i18n-title="edit.title_eraser_width">
-<button onclick="clearPage()" data-i18n="edit.clear_button">Clear All</button>
-<button onclick="saveAndSend()" data-i18n="edit.save_button">Save and Send</button>
+        <!-- Chybové hlásenie -->
+        <div id="errorMessage">
+            <span id="errorText"></span>
+            <button type="button" class="close-btn" onclick="hideErrorMessage()">×</button>
+        </div>
 
-<div id="pdf-container">
-    <canvas id="pdf-canvas"></canvas>
-    <canvas id="draw-canvas"></canvas>
+        <div class="text-center mb-3">
+            <!-- Skrytý input -->
+            <input type="file" id="pdfInput" accept="application/pdf" />
+
+            <!-- Vlastné tlačidlo s ikonou -->
+            <label for="pdfInput" class="custom-file-upload">
+                <i class="bi bi-upload"></i>
+                <span data-i18n="compress.upload_label">Nahraj PDF</span>
+            </label>
+
+            <!-- Zobrazenie názvu súboru -->
+            <div id="fileInfo" class="mt-2">
+                <span id="fileNameDisplay"></span>
+            </div>
+        </div>
+
+        <!-- Ovládacie prvky -->
+        <div class="edit-controls">
+            <div class="d-flex align-items-center gap-2">
+                <label for="pen-width" data-i18n="edit.title_pen_width">Pen Width:</label>
+                <input id="pen-width" type="range" min="3" value="5" step="2" max="25">
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <label for="pen-color" data-i18n="edit.title_pen_color">Pen Color:</label>
+                <input type="color" value="#000000" id="pen-color">
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <button class="btn btn-primary" onclick="handleInput()" data-i18n="edit.text_button">Text</button>
+                <label for="text-size" data-i18n="edit.title_text_size">Text Size:</label>
+                <input id="text-size" type="number" min="3" value="16" step="2" max="72" class="form-control">
+                <label for="text-color" data-i18n="edit.title_text_color">Text Color:</label>
+                <input id="text-color" type="color" value="#000000">
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <button class="btn btn-primary" onclick="toggleEraser()" data-i18n="edit.eraser_button">Eraser</button>
+                <label for="eraser-width" data-i18n="edit.title_eraser_width">Eraser Width:</label>
+                <input id="eraser-width" type="range" min="3" value="5" step="2" max="25">
+            </div>
+            <button class="btn btn-danger" onclick="clearPage()" data-i18n="edit.clear_button">Clear All</button>
+            <button class="btn btn-primary" onclick="saveAndSend()" data-i18n="edit.save_button">Save and Send</button>
+        </div>
+
+        <div id="pdf-container">
+            <canvas id="pdf-canvas"></canvas>
+            <canvas id="draw-canvas"></canvas>
+        </div>
+
+        <div id="pdf-preview" class="text-center">
+            <h2 class="display-6" data-i18n="edit.preview_title">Page Previews</h2>
+            <div id="thumbnail-container" class="thumbnail-grid"></div>
+        </div>
+        <div class="container mt-5"">
+            <div class="d-flex align-items-center gap-2">
+                <label for="page-number" data-i18n="edit.label_page">Page:</label>
+                <input type="number" value="1" id="page-number" class="form-control">
+                <button class="btn btn-outline-secondary" onclick="prevPage()" data-i18n="edit.prev_button">&lt;</button>
+                <button class="btn btn-outline-secondary" onclick="nextPage()" data-i18n="edit.next_button">&gt;</button>
+            </div>
+        </div>
+    </div>
 </div>
-
-<div id="pdf-preview">
-    <h2 data-i18n="edit.preview_title">Page Previews</h2>
-    <div id="thumbnail-container" class="thumbnail-grid"></div>
-</div>
-
 <!-- PDF.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
 <!-- Bootstrap JS -->
@@ -68,6 +164,59 @@
 
     const drawCanvas = document.getElementById('draw-canvas');
     const pdfCanvas = document.getElementById('pdf-canvas');
+    const fileNameDisplay = document.getElementById('fileNameDisplay');
+    const errorMessage = document.getElementById('errorMessage');
+    const errorText = document.getElementById('errorText');
+
+    // Funkcia na zobrazenie chybového hlásenia
+    function showErrorMessage(message) {
+        errorText.textContent = message;
+        errorMessage.classList.add('show');
+        // Automaticky skryť po 5 sekundách
+        setTimeout(hideErrorMessage, 5000);
+    }
+
+    // Funkcia na skrytie chybového hlásenia
+    function hideErrorMessage() {
+        errorMessage.classList.remove('show');
+        errorText.textContent = '';
+    }
+
+    // Funkcia na spracovanie nahraného súboru
+    const handleFile = (file) => {
+        if (file && file.type === 'application/pdf') {
+            fileNameDisplay.textContent = file.name;
+            const reader = new FileReader();
+            reader.onload = function() {
+                typedarray = new Uint8Array(this.result);
+                pdfjsLib.getDocument(typedarray).promise.then(pdf => {
+                    pdfDoc = pdf;
+                    loadPage(1);
+                    renderThumbnails();
+                    document.getElementById('page-number').addEventListener('change', () => {
+                        const pageNum = parseInt(document.getElementById('page-number').value);
+                        saveCurrentDrawing();
+                        loadPage(pageNum);
+                    });
+                }).catch(err => {
+                    showErrorMessage(i18next.t('edit.error_load_pdf', { error: err.message }));
+                });
+            };
+            reader.onerror = function() {
+                showErrorMessage(i18next.t('edit.error_read_file'));
+            };
+            reader.readAsArrayBuffer(file);
+        } else {
+            fileNameDisplay.textContent = '';
+            showErrorMessage(i18next.t('edit.error_invalid_file'));
+        }
+    };
+
+    // Manuálny výber súboru
+    document.getElementById('pdfInput').addEventListener('change', function() {
+        const file = this.files[0];
+        handleFile(file);
+    });
 
     document.getElementById('text-color').addEventListener('change', () => {
         textColor = document.getElementById('text-color').value;
@@ -95,6 +244,10 @@
 
     function clearPage() {
         const pageNum = parseInt(document.getElementById('page-number').value);
+        if (!pdfDoc || pageNum < 1 || pageNum > pdfDoc.numPages) {
+            showErrorMessage(i18next.t('edit.error_invalid_page'));
+            return;
+        }
         ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
         drawings[pageNum] = null;
         textAnnotations[pageNum] = [];
@@ -278,6 +431,10 @@
     }
 
     function loadPage(pageNumber) {
+        if (!pdfDoc || pageNumber < 1 || pageNumber > pdfDoc.numPages) {
+            showErrorMessage(i18next.t('edit.error_invalid_page'));
+            return;
+        }
         pdfDoc.getPage(pageNumber).then(page => {
             const viewport = page.getViewport({
                 scale: 1.5
@@ -309,33 +466,24 @@
                     });
                 }
             });
+        }).catch(err => {
+            showErrorMessage(i18next.t('edit.error_load_page', { error: err.message }));
         });
     }
 
-    document.getElementById('pdf-upload').addEventListener('change', function() {
-        const file = this.files[0];
-        const reader = new FileReader();
-        reader.onload = function() {
-            typedarray = new Uint8Array(this.result);
-            pdfjsLib.getDocument(typedarray).promise.then(pdf => {
-                pdfDoc = pdf;
-                loadPage(1);
-                renderThumbnails();
-                document.getElementById('page-number').addEventListener('change', () => {
-                    const pageNum = parseInt(document.getElementById('page-number').value);
-                    saveCurrentDrawing();
-                    loadPage(pageNum);
-                });
-            });
-        };
-        reader.readAsArrayBuffer(file);
-    });
-
     function saveAndSend() {
+        if (!pdfDoc) {
+            showErrorMessage(i18next.t('edit.error_no_pdf'));
+            return;
+        }
         saveCurrentDrawing();
         const pageNum = parseInt(document.getElementById('page-number').value);
         const annotationBlob = drawCanvas.toDataURL("image/png");
-        const fileInput = document.getElementById('pdf-upload');
+        const fileInput = document.getElementById('pdfInput');
+        if (!fileInput.files[0]) {
+            showErrorMessage(i18next.t('edit.error_no_file'));
+            return;
+        }
         const formData = new FormData();
         formData.append("pdf", fileInput.files[0]);
         formData.append("annotation", dataURLtoBlob(annotationBlob));
@@ -343,13 +491,17 @@
         fetch("http://node75.webte.fei.stuba.sk/api/pdf/edit", {
             method: "POST",
             body: formData
-        }).then(res => res.blob())
-            .then(blob => {
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = "edited.pdf";
-                link.click();
-            });
+        }).then(res => {
+            if (!res.ok) throw new Error('Failed to save PDF');
+            return res.blob();
+        }).then(blob => {
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = "edited.pdf";
+            link.click();
+        }).catch(err => {
+            showErrorMessage(i18next.t('edit.error_save_failed', { error: err.message }));
+        });
     }
 
     function dataURLtoBlob(dataurl) {
