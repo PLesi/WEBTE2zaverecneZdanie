@@ -51,10 +51,10 @@
 
         <div class="text-center mb-3">
             <!-- Skrytý input -->
-            <input type="file" id="pdfInput" accept="image/jpeg" />
+            <input type="file" id="jpgFile" accept="image/jpeg" />
 
             <!-- Vlastné tlačidlo s ikonou -->
-            <label for="pdfInput" class="custom-file-upload">
+            <label for="jpgFile" class="custom-file-upload">
                 <i class="bi bi-upload"></i>
                 <span data-i18n="jpg_to_pdf.upload_label">Nahraj JPG</span>
             </label>

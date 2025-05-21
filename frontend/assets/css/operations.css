@@ -3,7 +3,7 @@
     flex-direction: column;
 }
 /* Skrytie pôvodného inputu */
-#pdfInput, #file1, #file2{
+#pdfInput, #file1, #file2, #jpgFile{
     display: none;
 }
 
@@ -20,7 +20,7 @@
     display: inline-block;
     padding: 10px 20px;
     background-color: #313038;
-    border-color: #c3bcf2;
+    border: 1px solid #c3bcf2;
     color: #c3bcf2;
     border-radius: 5px;
     cursor: pointer;
