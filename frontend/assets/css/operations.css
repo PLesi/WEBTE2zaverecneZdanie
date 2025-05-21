@@ -3,7 +3,7 @@
     flex-direction: column;
 }
 /* Skrytie pôvodného inputu */
-#pdfInput {
+#pdfInput, #file1, #file2{
     display: none;
 }
 
