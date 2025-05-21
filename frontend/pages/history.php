@@ -247,7 +247,7 @@
                     operationCell.textContent = item.operation;
                     timeCell.textContent = item.time;
                     cityCell.textContent = item.city;
-                    countryCell.textContent = item.country;
+                    countryCell.textContent = item.state;
                     platformCell.textContent = item.platform;
                 });
                 updateContent(); // Update translations after data is loaded
