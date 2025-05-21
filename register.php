@@ -100,9 +100,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Log the error with detailed information for debugging
         error_log("Registration PDO error: " . $e->getMessage());
         error_log("Error code: " . $e->getCode());
-        error_log("SQL state: " . $e->errorInfo[0] ?? 'Unknown');
         
         header("Location: frontend/pages/registration_form.php?error=" . urlencode($e->getMessage()));
         exit();
     }
-} 
+}
