@@ -8,8 +8,6 @@ if (isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] === true) {
     exit();
 }
 
-/*   NEMAZAŤ
-session_start(); 
 
 require_once 'config.php';
 
@@ -39,14 +37,14 @@ $userId = $_SESSION['user_id'] ?? null;
 
 if ($userId) {
     try {
-        $stmt = $pdo->prepare("SELECT username, is_admin, api_key FROM users WHERE id = :id");
+        $stmt = $pdo->prepare("SELECT username, is_admin FROM users WHERE id = :id");
         $stmt->execute([':id' => $userId]);
         $fetchedUserData = $stmt->fetch();
 
         if ($fetchedUserData) {
             $username = htmlspecialchars($fetchedUserData['username']);
             $isAdmin = (bool)$fetchedUserData['is_admin']; // Konvertujeme TINYINT(1) na boolean
-            $currentDbApiKey = htmlspecialchars($fetchedUserData['api_key']);
+            $currentDbApiKey = "Potrebné načítať z api_keys tabuľky";
         } else {
             $message = "Chyba: Používateľ s ID {$userId} sa nenašiel v databáze. Vaša session môže byť neplatná.";
             session_destroy(); // Zničí session, ak používateľ neexistuje
@@ -67,12 +65,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["change_api_key"]) && $
 
     if (!empty($newApiKey)) {
         try {
-            // Aktualizácia API kľúča v databáze pre používateľa zisteného zo session
-            $stmt = $pdo->prepare("UPDATE users SET api_key = :new_api_key WHERE id = :id");
-            $result = $stmt->execute([
-                ':new_api_key' => $newApiKey,
-                ':id' => $userId
-            ]);
+            // Aktualizácia API kľúča v tabuľke api_keys pre používateľa zisteného zo session
+            $checkStmt = $pdo->prepare("SELECT id FROM api_keys WHERE user_id = :user_id");
+            $checkStmt->execute([':user_id' => $userId]);
+            $existingKey = $checkStmt->fetch();
+            
+            if ($existingKey) {
+                // Update existing API key
+                $stmt = $pdo->prepare("UPDATE api_keys SET api_key = :new_api_key WHERE user_id = :user_id");
+                $result = $stmt->execute([
+                    ':new_api_key' => $newApiKey,
+                    ':user_id' => $userId
+                ]);
+            } else {
+                // Insert new API key
+                $stmt = $pdo->prepare("INSERT INTO api_keys (user_id, api_key) VALUES (:user_id, :new_api_key)");
+                $result = $stmt->execute([
+                    ':user_id' => $userId,
+                    ':new_api_key' => $newApiKey
+                ]);
+            }
 
             if ($result) {
                 // Aktualizácia API kľúča aj v session
@@ -90,7 +102,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["change_api_key"]) && $
         $message = "Chyba pri generovaní nového API kľúča.";
     }
 }
-*/
+
 ?>
 
 <?php
